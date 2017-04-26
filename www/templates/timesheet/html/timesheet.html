@@ -1,0 +1,136 @@
+﻿
+<!--
+
+   @author: Challagali Kiran Chakravarthi
+   @technical-support:
+       email: kiran.challagali@providencesoft.com
+       phone: +91-8886662322
+
+   @page-info:
+
+        Timesheets Page
+-->
+
+
+<ion-view cache-view="false" on-drag-left="onDragLeft()" on-drag-right="onDragRight()" menu-close view-title="{{ isEmpTab ? 'Employee Timesheet' :  'Timesheet Application' }}" ng-init="form={}; model={}">
+    <ion-content class="padding background" scroll="true" overflow-scroll="false">
+        <form name="form_timesheet" novalidate="">
+            <div class="padding-bottom">
+
+
+                <!-- Timesheet Application  -->
+                <div ng-show="isNew" class="card padding stable-bg transparent-9">
+                    <div class="list">
+                        <b class="positive">Timesheet Application</b>
+                        <hr class="separator" />
+
+                        <ion-list class="positive-bg">
+
+                            <label class="no-borders">
+                                <small class="positive">Morning Session</small>
+                                <textarea rows="8" cols="50" name="mngsession" ng-model="model.mngsession" ng-required="true"></textarea>
+                            </label>
+
+                            <div class="error-container" ng-show="form_timesheet.mngsession.$error && form_timesheet.$submitted" ng-messages="form_timesheet.mngsession.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label class="no-borders">
+                                <small class="positive">Afternoon Session</small>
+                                <textarea rows="8" cols="50" name="afternoonsession" ng-model="model.afternoonsession" ng-required="true"></textarea>
+                            </label>
+
+                            <div class="error-container" ng-show="form_timesheet.afternoonsession.$error && form_timesheet.$submitted" ng-messages="form_timesheet.afternoonsession.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+
+                            <label class="no-borders">
+                                <small class="positive">Date</small>
+                                <input type="date" name="timesheetdate" ng-model="model.timesheetdate" ng-required="true" />
+                            </label>
+                            <div class="error-container" ng-show="form_timesheet.timesheetdate.$error && form_timesheet.$submitted" ng-messages="form_timesheet.timesheetdate.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+
+
+                        </ion-list>
+                        <button class="button button-full button-positive radius-4" ng-click="form_timesheet.$valid && submit(model.mngsession, model.afternoonsession, model.timesheetdate)">Submit</button>
+                    </div>
+                </div>
+</div>
+        </form>
+
+        <div>
+        <form name="form_timesheets" novalidate="">
+            <!-- Timesheets -->
+            <ion-list ng-show="isEmpTab">
+                <label class="no-borders">
+                    <small class="positive">Employee Name</small>
+                    <select name="employee" ng-model="model.employee" ng-options="employee.firstName+' '+employee.lastName+' '+employee.surName for employee in employees track by employee.id" ng-required="true">
+                        <option>--select--</option>
+                    </select>
+                </label>
+                <div class="error-container" ng-show="form_timesheets.startDate.$error && form_timesheets.$submitted" ng-messages="form_timesheets.startDate.$error">
+                    <div ng-messages-include="error-list1.html"></div>
+                </div>
+                <label class="no-borders">
+                    <small class="positive">From</small>
+                    <input type="date" name="fromdate" ng-model="model.fromdate" ng-required="true" />
+                </label>
+                <div class="error-container" ng-show="form_timesheets.fromdate.$error && form_timesheets.$submitted" ng-messages="form_timesheets.fromdate.$error">
+                    <div ng-messages-include="error-list1.html"></div>
+                </div>
+                <label class="no-borders">
+                    <small class="positive">To</small>
+                    <input type="date" name="todate" ng-model="model.todate" ng-required="true" />
+                </label>
+                <div class="error-container" ng-show="form_timesheets.todate.$error && form_timesheets.$submitted" ng-messages="form_timesheets.todate.$error">
+                    <div ng-messages-include="error-list1.html"></div>
+                </div>
+                <button class="button button-full button-positive radius-4" ng-click="form_timesheets.$valid && gettimesheet(model.employee.id, model.fromdate, model.todate)">Submit</button>
+            </ion-list>
+            </form>
+            </div>
+          <!--View time Sheet-->
+            <div ng-show="isView" class="card padding stable-bg transparent-9"  >
+
+                <form name="form_timesheets" novalidate="">
+            <!-- Timesheets -->
+            <ion-list >
+                <label class="no-borders">
+                    <small class="positive">From</small>
+                    <input type="date" name="fromdate" ng-model="model.fromdate" ng-required="true" />
+                </label>
+                <div class="error-container" ng-show="form_timesheets.fromdate.$error && form_timesheets.$submitted" ng-messages="form_timesheets.fromdate.$error">
+                    <div ng-messages-include="error-list1.html"></div>
+                </div>
+                <label class="no-borders">
+                    <small class="positive">To</small>
+                    <input type="date" name="todate" ng-model="model.todate" ng-required="true" />
+                </label>
+                <div class="error-container" ng-show="form_timesheets.todate.$error && form_timesheets.$submitted" ng-messages="form_timesheets.todate.$error">
+                    <div ng-messages-include="error-list1.html"></div>
+                </div>
+                <button class="button button-full button-positive radius-4" ng-click="form_timesheets.$valid && gettimesheet_view(model.fromdate, model.todate)">Submit</button>
+            </ion-list>
+            </form>
+ 
+
+            </div>
+                    
+               
+         
+            </div>
+
+</ion-content>
+    <!-- tabs -->
+    <div class="tabs-striped tabs-background-dark tabs-color-light transparent-9">
+        <div class="tabs">
+
+            <a ng-show="!isAdmin" class="tab-item {{ isNew ? 'active' : '' }}" ng-click="submitTimesheet()">New Application</a>
+            <a ng-show="isManager" class="tab-item {{ isEmpTab ? 'active' : '' }}" ng-click="getTimesheets()">Timesheets</a>
+            <a ng-show="!isAdmin" class="tab-item {{ isView ? 'active' : '' }}" ng-click="getview()">View Timesheets</a>
+            
+            
+        </div>
+    </div>
+</ion-view>

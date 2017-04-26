@@ -1,0 +1,53 @@
+<!--
+
+   @author: Koketso Gift Matlhatsi
+   @technical-support:
+       email: Koketso42@gmail.com
+       phone: 071 530 2436 
+       
+   @page-info:
+
+        Home Page
+-->
+
+<ion-view cache-view="false" hide-nav-bar="false"  view-title="Home" on-drag-left="onDragLeft()" on-drag-right="onDragRight()" menu-close>
+    <ion-content class="background" scroll="true" overflow-scroll="false">
+        <div class="logo-container">
+            <image class="logo" src="img/global/logo.png" />
+        </div>
+        <div class="page-header">
+            <label class="item item-input-wrapper" style="padding: 8px 12px !important; margin: 8px 0 !important; border-radius: 8px !important;">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" placeholder="Search" name="search" ng-model="home.search">
+            </label>
+            <h1>Latest News</h1>
+        </div>
+        <div class="home-content">
+            <div class="card transparent">
+                <div class="card-header dark-bg">
+                    Staff Weekly Meeting 
+                </div>
+                <div class="card-content">
+                    Hi Team <br/><br/>
+                    Please be advised of the time adjustment. <br/><br/>
+
+                    <b>When</b>
+                    <p>Occurs every Monday effective 2016/09/26 until 2016/12/26 from 11:30 AM to 12:30 PM</p>
+                    <br />
+                    <b>Location</b>
+                    <p>35 Western service road</p>
+
+                    <br/><br/>
+
+                    <b>Kind regards</b><br/>
+                    Trish                     
+                </div>
+                <hr class="separator" />
+                <div class="card-footer">
+                    <p text-right><b>Posted On:</b> Mon 08:17 AM</p>
+                </div>
+                
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

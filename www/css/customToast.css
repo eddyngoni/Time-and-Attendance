@@ -1,0 +1,88 @@
+/**
+ *  @author: Koketso Gift Matlhatsi
+ *  @technical-support:
+ *      email: Koketso42@gmail.com
+ *      phone: 071 530 2436 
+ *      
+ *  @page-info:
+ *  
+ *      This a custom css for toast class
+ */
+
+#toast {
+    visibility: hidden;
+    max-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 16px;
+    position: fixed;
+    z-index: 999; /* always on top */
+    left: 50%;
+    bottom: 30px;
+}
+
+#toast.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0; 
+        opacity: 0;
+    }
+    
+    to {
+        bottom: 30px; 
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0; 
+        opacity: 0;
+    }
+    
+    to {
+        bottom: 30px; 
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px; 
+        opacity: 1;
+    }
+    
+    to {
+        bottom: 0; 
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px; 
+        opacity: 1;
+    }
+    
+    to {
+        bottom: 0; 
+        opacity: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #toast {
+        width: 100%;
+        margin-left: -135px;
+        padding: 8px;
+        font-size: 14px;
+    }
+}

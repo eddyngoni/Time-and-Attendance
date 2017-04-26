@@ -1,0 +1,164 @@
+<!--
+
+   @author: Koketso Gift Matlhatsi
+   @technical-support:
+       email: Koketso42@gmail.com
+       phone: 071 530 2436 
+       
+   @page-info:
+
+        Home Page
+-->
+
+<ion-view cache-view="false" on-drag-left="onDragLeft()" on-drag-right="onDragRight()" menu-close view-title="{{ isRequest ? 'Employee Travel Claims' : isTrip ? 'Travel Claims' : 'Manual Travel Claim'  }}" ng-init="form={}; model={}">
+    <ion-content class="padding content-background" scroll="true" overflow-scroll="false">
+        <form name="form_travel" novalidate="">
+            <div class="padding-bottom">
+                <!-- Employee Travel Claims  -->
+                <ion-list ng-show="isRequest">
+                    <ion-item class="stable-bg radius-4" ng-show="empRequestsList.length" ng-repeat="request in empRequestsList" ng-click="travelDetails(request)">
+                        <div class="item-icon-right positive no-background">
+                            <b>{{request.name}}</b>
+                            <p style="font-size: 10px !important;">{{ request.distance }}</p>
+                            <i class="icon ion-android-arrow-dropright-circle" style="font-size: 21px !important;"></i>
+                        </div>
+                    </ion-item>
+                    <p ng-show="!empRequestsList.length" class="full center padding assertive" style="font-size: 27px !important;">
+                        <b><span class="icon ion-information-circled"></span> Record not found!</b>
+                    </p>
+                </ion-list>
+                <!-- Travel Claims Status  -->
+                <div ng-show="isTrip">
+                    <div ng-show="requestsList.length" ng-repeat="requestObj in requestsList" class="card padding stable-bg transparent-9">
+                        <div class="list">
+                            <b class="positive"><span class="icon {{ requestObj.status == 'Approved' ? 'balanced ion-checkmark-round' : requestObj.status == 'Declined' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ requestObj.status }}</b>
+                            <hr class="separator" />
+                            <ion-list class="positive-bg">
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-person light" style="font-size: 31px !important;"></i>
+                                    <span class="text-note"><b>Approver:</b> <p>{{ requestObj.approver || 'N/A' }}</p></span>
+                                </div>
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-record balanced" style="font-size: 31px !important;"></i>
+                                    <span class="text-note"><b>Departure Address:</b> <p>{{ requestObj.slocation || 'N/A' }}</p></span>
+                                </div>
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-record assertive" style="font-size: 31px !important;"></i>
+                                    <span class="text-note"><b>Destination Address:</b> <p>{{ requestObj.dlocation || 'N/A' }}</p></span>
+                                </div>
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-calendar positive" style="font-size: 31px !important;"></i>
+                                    <span class="text-note"><b>Date:</b> <p>{{ requestObj.created_on || 'N/A' }}</p></span>
+                                </div>
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-clock balanced" style="font-size: 31px !important;"></i>
+                                    <span class="text-note"><b>Time In:</b> <p>{{ requestObj.start_time || 'N/A' }}</p></span>
+                                </div>
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-clock assertive" style="font-size: 31px !important;"></i>
+                                    <span class="text-note"><b>Time Out:</b> <p>{{ requestObj.end_time || 'N/A' }}</p></span>
+                                </div>
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-compose" style="font-size: 31px !important;"></i>
+                                    <span class="text-note">
+
+                                        <b>Reason:</b> <textarea rows="7" style="overflow-y: scroll;" disabled>{{ requestObj.reason || 'N/A' }}</textarea>
+                                    </span>
+                                </div>
+                            </ion-list>
+                        </div>
+                    </div>
+                    <p ng-show="!requestsList.length" class="full center padding assertive">
+                        <b style="font-size: 18px !important;"><span class="icon ion-information-circled" style="font-size: 18px !important;"></span> Record not found!</b>
+                    </p>
+                </div>
+                <!-- Manual Travel Claim  -->
+                <div ng-show="isCustom" class="card padding stable-bg transparent-9">
+                    <div class="list">
+                        <b class="positive">Manual Travel Claim</b>
+                        <hr class="separator" />
+                        <ion-list class="positive-bg">
+                            <label class="no-borders">
+                                <small class="positive">Reason for Travel</small>
+                                <textarea ng-required="true" name="reason" rows="8" cols="50"  ng-model="model.reason"></textarea>
+                            </label>
+                            <div class="error-container" ng-show="form_travel.reason.$error && form_travel.$submitted" ng-messages="form_travel.reason.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label class="no-borders">
+                                <small class="positive">Departure Address</small>
+                                <select ng-required="true" name="office" ng-model="model.office" ng-options="office.title for office in offices track by office.id">
+                                    <option value="">--select--</option>
+
+                                </select>
+                            </label>
+                            <div class="error-container" ng-show="form_travel.office.$error && form_travel.$submitted" ng-messages="form_travel.office.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label ng-show="model.office.title === 'Other'" class="no-borders">
+                                <small class="positive">Departure Address</small>
+                                <input  type="text" name="from" ng-model="model.from" />
+                            </label>
+                            <!--<div class="error-container" ng-show="form_travel.from.$error && form_travel.$submitted" ng-messages="form_travel.from.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>-->
+                            <label class="no-borders">
+                                <small class="positive">Destination Address</small>
+                                <input ng-required="true" type="text" name="to" ng-model="model.to" />
+                            </label>
+                            <div class="error-container" ng-show="form_travel.to.$error && form_travel.$submitted" ng-messages="form_travel.to.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label class="no-borders">
+                                <small class="positive">Date</small>
+                                <input ng-required="true" type="date" name="date" ng-model="model.date" />
+                            </label>
+                            <div class="error-container" ng-show="form_travel.date.$error && form_travel.$submitted" ng-messages="form_travel.date.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label class="no-borders">
+                                <small class="positive">Time of Departure</small>
+                                <input ng-required="true" type="time" name="time" ng-model="model.time" />
+                            </label>
+                            <div class="error-container" ng-show="form_travel.time.$error && form_travel.$submitted" ng-messages="form_travel.time.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label class="no-borders">
+                                <small class="positive">Time Arrived</small>
+                                <input ng-required="true" type="time" name="timeArrived" ng-model="model.timeArrived" />
+                            </label>
+                            <div class="error-container" ng-show="form_travel.timeArrived.$error && form_travel.$submitted" ng-messages="form_travel.timeArrived.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label class="no-borders">
+                                <small class="positive">Distance In km (e.g. 34)</small>
+                                <input ng-required="true" type="number" name="distance" ng-model="model.distance" />
+                            </label>
+                            <div class="error-container" ng-show="form_travel.distance.$error && form_travel.$submitted" ng-messages="form_travel.distance.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label class="no-borders">
+                                <small class="positive">Approver</small>
+                                <select name="approver" ng-model="model.approver" ng-options="manager.username for manager in managers track by manager.id" ng-required="true">
+                                    <option value="">-Select-</option>
+                                </select>
+                            </label>
+                            <div class="error-container" ng-show="form_travel.approver.$error && form_travel.$submitted" ng-messages="form_travel.approver.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                        </ion-list>
+                        <button class="button button-full button-positive radius-4" ng-click="form_travel.$valid && logTrip(model.reason, model.office.title, model.from, model.to, model.date, model.time, model.timeArrived, model.distance, model.approver.username)">Log Travel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ion-content>
+    <!-- tabs -->
+    <div class="tabs-striped tabs-background-dark tabs-color-light transparent-9">
+        <div class="tabs">
+             <a ng-show="isManager" class="tab-item {{ isRequest ? 'active' : '' }}" ng-click="request()">Travel Requests</a>
+             <a class="tab-item {{ isTrip ? 'active' : '' }}" ng-click="myTrips()">My Trips</a>
+             <a class="tab-item {{ isCustom ? 'active' : '' }}" ng-click="customTrip()">Custom Travel</a>
+        </div>
+    </div>
+</ion-view>

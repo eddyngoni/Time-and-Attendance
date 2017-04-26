@@ -1,0 +1,29 @@
+﻿<ion-view ng-controller="ChangeOfficeController" menu-close>
+    <ion-content scroll="true" overflow-scroll="false">
+
+        <div class="logo-container" style="padding-top:2px!important">
+            <image class="logo" src="img/global/logo.png" />
+        </div>
+
+        <div>
+
+            <label class="padding-top" style="border: none;">
+                <small class="positive">Please select the office </small>
+            </label>
+           
+            <select ng-model="pssselectedoffice" ng-change="changedValue(pssselectedoffice)"
+                    data-ng-options="office as office.name for office in offices">
+                <option value="">Select Account</option>
+            </select>
+                <div width="80%" id="txtOther" class="list list-inset" style="margin-left:10%;margin-right:10%;display:block">
+                    <label class="item item-input" id="lblotherOffice" style="display:none">
+                        <input type="text" id="txtoffice" ng-model="user.desc" placeholder="Enter location" >
+                    </label>
+
+                    <button class="button button-full button-positive" ng-click="submitDetails()">Submit</button>
+                </div>
+
+</div>
+
+    </ion-content>
+</ion-view>

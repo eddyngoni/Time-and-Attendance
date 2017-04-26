@@ -1,0 +1,138 @@
+<!--
+
+   @author: Koketso Gift Matlhatsi
+   @technical-support:
+       email: Koketso42@gmail.com
+       phone: 071 530 2436 
+       
+   @page-info:
+
+        Home Page
+-->
+
+<ion-view cache-view="false"  on-drag-left="onDragLeft()" ng-init="isAdmn()" on-drag-right="onDragRight()" menu-close view-title="{{ isEmpTab ? 'Employee Leave Applications' : isHistory ? 'My Leave Application Status' : 'New Leave Application' }}" ng-init="form={}; model={}">
+    <ion-content class="padding background" scroll="true" overflow-scroll="false">
+        <form name="form_leave" novalidate="">
+            <div class="padding-bottom">
+                <!-- Leave Requests -->
+                <ion-list ng-show="isEmpTab">
+                    <ion-item class="stable-bg radius-4" ng-show="empRequestsList.length" ng-repeat="request in empRequestsList" ng-click="leaveDetails(request)">
+                        <div class="item-icon-right positive no-background">
+                            <b>{{request.EmpName}}</b>
+                            <p style="font-size: 10px !important;">{{ request.Status }}</p>
+                            <i class="icon ion-android-arrow-dropright-circle" style="font-size: 21px !important;"></i>
+                        </div>
+                    </ion-item>
+                    <p ng-show="!empRequestsList.length" class="full center padding assertive" style="font-size: 27px !important;">
+                        <b><span class="icon ion-information-circled"></span> Record not found!</b>
+                    </p>
+                </ion-list>
+                <!-- Leave Application Status  -->
+                <div ng-show="isHistory">
+                    <div ng-show="requestsList.length" ng-repeat="request in requestsList" class="card padding stable-bg transparent-9">
+                        <div class="list">
+                            <b class="positive"><span class="icon {{ request.Status == 'Approved' ? 'balanced ion-checkmark-round' : request.Status == 'Declined' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ request.Status }}</b>
+                            <hr class="separator" />
+                            <ion-list class="positive-bg">
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-person light" style="font-size: 31px !important;"></i>
+                                    <span class="text-note"><b>Approver:</b> <p>{{ request.Approver || 'N/A' }}</p></span>
+                                </div>
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-record balanced" style="font-size: 31px !important;"></i>
+                                    <span class="text-note"><b>Start Date:</b> <p>{{ request.StartDate || 'N/A' }}</p></span>
+                                </div>
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-record assertive" style="font-size: 31px !important;"></i>
+                                    <span class="text-note"><b>End Date:</b> <p>{{ request.EndDate || 'N/A' }}</p></span>
+                                </div>
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-card" style="font-size: 31px !important;"></i>
+                                    <span class="text-note"><b>Leave Type:</b> <p>{{ request.LeaveType || 'N/A' }}</p></span>
+                                </div>
+                                <div class="item item-icon-left positive no-background no-borders">
+                                    <i class="icon ion-compose" style="font-size: 31px !important;"></i>
+                                    <span class="text-note">
+
+                                        <b>Comments:</b> <textarea rows="7" style="overflow-y: scroll;" disabled>{{ request.Comments || 'N/A' }}</textarea>
+                                    </span>
+                                </div>
+                            </ion-list>
+                        </div>
+                    </div>
+                    <p ng-show="!requestsList.length" class="full center padding assertive">
+                        <b style="font-size: 18px !important;"><span class="icon ion-information-circled" style="font-size: 18px !important;"></span> Record not found!</b>
+                    </p>
+                </div>
+                <!-- Leave Application  -->
+                <div ng-show="isNew" class="card padding stable-bg transparent-9">
+                    <div class="list">
+                        <b class="positive">New Leave Application</b>
+                        <hr class="separator" />
+                        <p class="light">Personal Details</p>
+                        <ion-list class="positive-bg">
+                            <label class="no-borders">
+                                <small class="positive">Leave Type</small>
+                                <select ng-model="model.type" ng-required="true" name="type">
+                                    <option>Annual Paid Leave</option>
+                                    <option>Sick Leave</option>
+                                    <option>Other</option>
+                                </select>
+                            </label>
+
+                            <div class="error-container" ng-show="form_leave.type.$error && form_leave.$submitted" ng-messages="form_leave.type.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label ng-show="model.type === 'Other'" class="no-borders">
+                                <small class="positive">Please specify</small>
+                                <textarea rows="5" cols="50" name="comments" ng-model="model.other"></textarea>
+                            </label>
+                            <label class="no-borders">
+                                <small class="positive">Start Date</small>
+                                <input type="date" name="startDate" ng-model="model.startDate" ng-required="true" />
+                            </label>
+                            <div class="error-container" ng-show="form_leave.startDate.$error && form_leave.$submitted" ng-messages="form_leave.startDate.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label class="no-borders">
+                                <small class="positive">End Date</small>
+                                <input type="date" name="endDate" ng-model="model.endDate" ng-required="true"/>
+                            </label>
+                            <div class="error-container" ng-show="form_leave.endDate.$error && form_leave.$submitted" ng-messages="form_leave.endDate.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label class="no-borders">
+                                <small class="positive">Comments</small>
+                                <textarea rows="8" cols="50" name="comments" ng-model="model.comments" ng-required="true"></textarea>
+                            </label>
+                            <div class="error-container" ng-show="form_leave.comments.$error && form_leave.$submitted" ng-messages="form_leave.comments.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <label class="no-borders">
+                                <small class="positive">Approver</small>
+                                <select name="approver" ng-model="model.approver" ng-options="manager.username for manager in managers track by manager.id" ng-required="true">
+                                    <option>--select--</option>
+                                </select>
+                            </label>
+                            <div class="error-container" ng-show="form_leave.approver.$error && form_leave.$submitted" ng-messages="form_leave.approver.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                        </ion-list>
+                        <button class="button button-full button-positive radius-4" ng-click="form_leave.$valid && apply(model.type, model.startDate, model.endDate, model.comments, model.approver.username)">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <!--<span style="position: fixed !important;">
+            <img style="position: relative; right: -880px !important; bottom: 0 !important; z-index: -1; width: 350px !important; height: 380px !important;" src="img/clock.png">
+        </span>-->
+            </form>
+</ion-content>
+    <!-- tabs -->
+    <div class="tabs-striped tabs-background-dark tabs-color-light transparent-9">
+        <div class="tabs">
+             <a ng-show="isManager" class="tab-item {{ isEmpTab ? 'active' : '' }}" ng-click="requests()">Leave Requests</a>
+             <a ng-show="!isAdmin" class="tab-item {{ isHistory ? 'active' : '' }}" ng-click="history()">Application Status</a>
+             <a ng-show="!isAdmin" class="tab-item {{ isNew ? 'active' : '' }}" ng-click="applyLeave()">New Application</a>
+        </div>
+    </div>
+</ion-view>

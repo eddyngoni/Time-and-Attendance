@@ -1,0 +1,39 @@
+<ion-view cache-view="false" view-title="Settings" hide-nav-bar="false">
+  <ion-content class="afterLogin" ng-controller="SettingsController">
+      <div class="content">
+        <form method="post" name="SettingsForm" ng-model="settingsForm" novalidate>  
+            
+            <div class="card padding">
+                <div class="list">
+                    <b class="positive">User controls</b>
+                    <hr class="separator" />
+                    <ion-list class="positive-bg">
+                        <label class="no-borders">
+                            <b>Please be aware</b> 
+                            <br />
+                            <p>
+                                Any fingerprint saved on this device may be used to access your "Providence" account on this app. 
+                                To protect the security of your account only your fingerprints should be stored on this device. 
+                                By <b>ENABLING</b> fingerprint authentication, any user credentials already enrolled with 
+                                fingerprint authentication will be overridden.
+                            </p>  
+                            <div class="full center fingerprint-icon">
+                                <img style="text-align: center;" src="{{ isAvailable ? 'img/global/fingerprint.png' : 'img/global/no-fingerprint.png' }}">
+                            </div>                    
+                        </label>
+                        <ion-toggle ng-show="isAvailable" class="afterLoginEdit" ng-model="fingerprint" ng-click="promptFingerprint()" toggle-class="toggle">
+                            {{ !isStored ? 'Enable Fingerprint Authentication' : 'Disable Fingerprint Authentication' }} 
+                        </ion-toggle>
+                    </ion-list>
+                    <div ng-show="isAvailable">
+                        <button class="button button-full button-positive radius-4" ng-click="saveSettings(fingerprint)">Save</button>
+                    </div>
+                    <div ng-show="!isAvailable">
+                        <p class="assertive">Your device doesn't support Fingerprint Authentication!</p>
+                    </div>
+                </div>
+            </div>  
+        </form>
+      </div>
+  </ion-content>
+</ion-view>

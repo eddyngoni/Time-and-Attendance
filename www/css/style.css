@@ -1,0 +1,457 @@
+/**
+ *  @author: Koketso Gift Matlhatsi
+ *  @technical-support:
+ *      email: Koketso42@gmail.com
+ *      phone: 071 530 2436 
+ *      
+ *  @page-info:
+ *  
+ *      This a custom css for the entire app
+ */
+
+* { 
+    font-family: sans-serif;
+    font-size: 18px !important;
+}
+
+/*   transparent header bar   */
+.bar.bar-header {
+    opacity: 0.9;
+    border-bottom-width: 0 !important;
+    -webkit-box-shadow: 0 0 20px rgb(0,0,0);
+    -moz-box-shadow: 0 0 20px rgb(0,0,0);
+    box-shadow: 0 0 20px rgb(0,0,0);
+}
+
+.scroll-content {
+    overflow: visible !important;
+}
+ 
+.platform-ios.platform-cordova:not(.fullscreen) .has-header {
+    top: 0px !important;
+}
+
+.custom-menu-icon {
+    border-style: inset !important;
+}
+
+/*  app background image  */
+
+ion-view {
+    background-image: url('../img/global/background2.png') !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.background-image {
+    background-image: url('../img/global/background2.png') !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    
+    /*
+    
+    background: url('../img/global/background2.png') no-repeat !important;
+    background-size: 100% 100% !important;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    
+    */
+}
+
+.background, content-background {
+    background: none !important;
+}
+
+/* Fingerprint styling  */
+.fingerprint-icon img {
+    width: 15% !important;
+    height: 15% !important;
+    text-align: center;
+}
+
+#map {
+    height: 280px;
+    width: auto;
+    margin: 27px !important;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+#panel {
+    width: 100% !important;
+    padding: 2px !important;
+    box-shadow: 2px 2px 2px 2px !important;
+}
+
+/* hide app scroll bars */
+::-webkit-scrollbar { 
+    display: none !important; 
+}
+
+/*  customize popup dialog  */
+.popup {
+    width: 80% !important;
+    border-radius: 8px !important;
+}
+
+.popup-title {
+    font-weight: bold !important;
+}
+
+.popup-body {
+    font-weight: normal !important;
+}
+
+/*  inputs and validations  */
+
+input[type=text], input[type=email], input[type=reset], input[type=password], textarea, input[type=date], input[type=time], input[type=number], input[type=submit], select {
+    width: 100% !important;
+    padding: 8px 12px !important;
+    margin: 8px 0 !important;
+    border-radius: 8px !important;
+    border: 1px solid #c0c0c0 !important;
+}
+
+/*
+
+    For validations
+
+input[type=text].ng-dirty, input[type=email].ng-dirty, input[type=password].ng-dirty, textarea.ng-dirty, select.ng-dirty {
+    border: 1px solid #ff0000 !important;
+}
+
+input[type=text].ng-valid, input[type=email].ng-valid, input[type=password].ng-valid, textarea.ng-valid, select.ng-valid {
+    border: 1px solid #c0c0c0 !important;
+}
+
+*/
+
+
+/* logo */
+.logo-pane {
+    width: 100%;
+    text-align: center;
+    padding: 4%;
+    margin-top: 10%;
+}
+
+.logo-pane img {
+    width: 90%;
+}
+
+.logo-container {
+    width: 100%;
+    text-align: center;
+    padding-top: 17% !important;
+}
+
+.logo {
+    width: 75%;
+    height: 12%;
+}
+
+
+.page-header {
+    text-align: center;
+}
+
+.page-footer {
+    text-align: center;
+    padding-top: 50px;
+}
+
+/* custom side menu */
+
+.side-menu {
+    background: none;
+}
+
+.menu-header-item {
+    background: #c92026 !important;
+}
+
+.side-menu ion-item {
+    background: none !important;
+}
+
+.menu-icon {
+    font-size: 30px !important;
+    width: 100%;
+    border: none;
+}
+
+/*.menu-icon:hover {
+    background: #c92026 !important;
+    border-left: 5px solid #000 !important;
+}*/
+
+.menu-logo {
+    width: 50%;
+    height: 50%;
+}
+
+.menu-header {
+    height: auto !important;
+    text-align: center;
+}
+
+/* transparence */
+
+.transparent {
+    opacity: 0.9;
+}
+
+/* custom card */
+
+.card {
+    border-radius: 7px;
+    height: auto !important;
+}
+
+.card-header {
+    color: #fff;
+    text-align: center !important;
+    padding: 8px 8px;
+}
+
+.card-content {
+    padding: 7px !important;  
+}
+
+.card-footer {
+    /*background: #222;
+    color: #fff;*/
+    text-align: right !important;
+    font-size: 10px;
+    padding-right: 7px !important;
+}
+
+/* custom break lines */
+
+.separator {
+    background: #c92026 !important;
+    border: 1px solid #c92026 !important;
+    width: 96% !important;
+}
+
+/* custom tabs */
+
+.tabFooter {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #787878;
+    width: 100%;
+}
+
+.tab-icon {
+    font-size: 20px !important;
+    color: #fff;
+}
+
+.tabItem {
+    float: left;
+    text-align: center;
+    width: 50%;
+}
+
+.tabItem a {
+    display: block;
+    color: white;
+    padding: 16px;
+    text-decoration: none;
+}
+
+.tabButtonItem {
+    float: left;
+    text-align: center;
+    width: 20%;
+}
+
+.tabButtonItem a {
+    display: block;
+    color: white;
+    padding: 16px;
+    text-decoration: none;
+}
+
+.tabActive {
+    background: #309749 !important;
+}
+
+.full {
+    width: 100% !important;
+}
+
+
+.error-container {
+  margin: 5px 0;
+}
+
+.error-container:last-child {
+    margin: 5px 0 0;
+}
+
+.error {
+  padding: 10px 16px;
+  font-family: "Arial Black", Gadget, sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #555;
+  vertical-align: middle;
+}
+
+.error i {
+  font-size: 24px;
+  color: #B83E2C;  
+  vertical-align: middle;
+}
+
+.last-error-container > .error {
+  padding: 10px 16px 0;
+}
+
+.has-errors {
+  border-bottom: 3px solid #B83E2C;
+}
+
+.no-errors {
+  border-bottom: 3px solid green;
+}
+
+/* hr separator */
+.separator {
+    width: 100%;
+    float: center;
+    border: 1px solid #683335;
+}
+
+/*  positioning  */
+
+.fixed {
+    position: fixed !important;
+}
+
+.bottom-30 {
+    bottom: 80px !important;
+}
+
+.padding-bottom {
+    padding-bottom: 15% !important;
+}
+
+/* always on top */
+.always-on-top {
+     z-index: 999 !important;
+}
+
+/*  sizing  */
+
+.full {
+    width: 100% !important;
+}
+
+/* bold active element text */
+.active {
+    font-weight: bold !important;
+}
+
+.bold-14 {
+    font-weight: bold !important;
+    font-size: 24px !important;
+}
+
+/* text alignments */
+
+.center {
+    text-align: center !important;
+}
+
+.left {
+    text-align: left !important;
+}
+
+.right {
+    text-align: right !important;
+}
+
+/* border radius */
+
+.radius-4 {
+    border-radius: 4px !important;
+}
+
+/*  default placeholder color  
+::-webkit-input-placeholder {
+   color: #fff !important;
+}
+
+:-moz-placeholder {
+   color: #fff !important;  
+}
+
+::-moz-placeholder { 
+   color: #fff !important;  
+}
+
+:-ms-input-placeholder {  
+   color: #fff !important;  
+} */
+
+/*  disable background and borders  */
+.no-background {
+    background: none !important;
+}
+
+.no-borders {
+    border: none !important;
+}
+
+/* transparence */
+
+.transparent-9 {
+    opacity: 0.9;
+}
+
+.transparent-8 {
+    opacity: 0.8;
+}
+
+.transparent-7 {
+    opacity: 0.7;
+}
+
+.transparent-6 {
+    opacity: 0.6;
+}
+
+/* hide default scrollbars */
+::-webkit-scrollbar { 
+    display: none !important; 
+}
+
+/* Smartphones between 420 - 600 sizing */
+@media screen and (max-width: 600px) {
+    
+    * {
+        font-size: 14px !important;
+    }
+
+    .menu-icon {
+        font-size: 17px !important;
+    }
+}
+
+/* Phones < 360 sizing */
+@media screen and (max-width: 350px) {
+    
+    * {
+        font-size: 12px !important;
+    }
+}

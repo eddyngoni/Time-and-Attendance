@@ -1,0 +1,43 @@
+<ion-view cache-view="false" view-title="Employee Leave Application">
+    <ion-content class="padding content-background" scroll="true" overflow-scroll="false">
+        <div class="card padding stable-bg transparent-9">
+                <div class="list">
+                    <b class="positive">Employee Leave Application</b>
+                    <hr class="separator" />
+                    <ion-list class="positive-bg">
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-person light" style="font-size: 31px !important;"></i>
+                            <span class="text-note"><b>Employee Name:</b> <p>{{ requestObj.EmpName || 'N/A' }}</p></span>
+                        </div>
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-record balanced" style="font-size: 31px !important;"></i>
+                            <span class="text-note"><b>Start Date:</b> <p>{{ requestObj.StartDate || 'N/A' }}</p></span>
+                        </div>
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-record assertive" style="font-size: 31px !important;"></i>
+                            <span class="text-note"><b>End Date:</b> <p>{{ requestObj.EndDate || 'N/A' }}</p></span>
+                        </div>
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-card" style="font-size: 31px !important;"></i>
+                            <span class="text-note"><b>Leave Type:</b> <p>{{ requestObj.LeaveType || 'N/A' }}</p></span>
+                        </div>
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-compose" style="font-size: 31px !important;"></i>
+                            <span class="text-note">
+                                
+                                <b>Comments:</b> <textarea rows="7" style="overflow-y: scroll;" disabled>{{ requestObj.Comments || 'N/A' }}</textarea>
+                            </span>
+                        </div>
+                        </ion-list>
+                    <div ng-show="requestObj.Status != 'In Progress'">
+                        <hr class="separator" />
+                        <p class="positive" style="text-align: right !important;"><span class="icon {{ requestObj.Status == 'Approved' ? 'balanced ion-checkmark-round' : requestObj.Status == 'Declined' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ requestObj.Status }}</p>
+                    </div>
+                    <div ng-show="requestObj.Status == 'In Progress'">
+                        <button class="button button-full button-balanced radius-4" ng-click="approve(requestObj)">Approve</button>
+                        <button class="button button-full button-assertive radius-4" ng-click="reject(requestObj)">Reject</button>
+                    </div>
+                </div>
+            </div>
+    </ion-content>
+</ion-view>

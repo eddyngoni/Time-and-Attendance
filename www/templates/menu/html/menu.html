@@ -1,0 +1,150 @@
+<ion-side-menus enable-menu-with-back-views="false" ng-controller="MenuController">
+    <ion-side-menu-content>
+        <ion-nav-bar class="bar-dark">
+        <ion-nav-back-button>
+        </ion-nav-back-button>
+            
+            <ion-nav-buttons side="left">
+              <button class="button button-icon button-clear ion-navicon custom-menu-icon" menu-toggle="left" ng-click="checkLogged()">
+              </button>
+            </ion-nav-buttons>
+          </ion-nav-bar>
+
+          <ion-nav-view name="menuContent"></ion-nav-view>
+    </ion-side-menu-content> 
+    <div id="mySidenav" class="sidenav dark-bg transparent-9">
+        <ion-content class="side-menu" scroll="true">
+            <ion-list class="menu-header padding">
+                <ion-item class="light-bg" menu-close style="border: none;" ng-click="">
+                    <image class="menu-logo" ng-src="{{ image }}" />
+                </ion-item>
+            </ion-list>
+            <ion-list class="padding" ng-show="!isLogged">
+                <ion-item class="ion-home menu-icon light" style="{{ activeHome ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="home()">
+                    Home
+                </ion-item>
+                <ion-item class="ion-log-in menu-icon light" style="{{ activeLogin ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="login()">
+                   Log In
+                </ion-item>
+                <!--<ion-item class="ion-person-add menu-icon light" style="{{ activeRegister ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="">
+                    Register
+                </ion-item>
+                <ion-item class="ion-information-circled menu-icon light" style="{{ activeAbout ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="">
+                    About
+                </ion-item>
+                <ion-item class="ion-android-call menu-icon light" style="{{ activeContact ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="">
+                    Contact Us
+                </ion-item>-->
+            </ion-list>
+            <ion-list ng-show="isLogged">
+                <ion-item class="ion-home menu-icon light" style="{{ activeHome ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="home()">
+                    Dashboard
+                </ion-item>
+                <ion-item class="ion-map menu-icon light" style="{{ activeTrip ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="tracking()">
+                    Bussiness Trip
+                </ion-item>
+                <ion-item class="ion-speedometer menu-icon light" style="{{ activeTravel ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="travel()">
+                    Travel Claims
+                </ion-item>
+                <ion-item class="ion-document-text menu-icon light" style="{{ activeTimesheet ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}"  menu-close ng-click="timesheet()">
+                    Timesheets
+                </ion-item>
+                <ion-item class="ion-earth menu-icon light" style="{{ activeLeave ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}"  menu-close ng-click="leaves()">
+                    Leave Application
+                </ion-item>
+                <!--<ion-item class="ion-document-text menu-icon light" menu-close ng-click="">
+                    Progress Report
+                </ion-item>-->
+                <ion-item class="ion-settings menu-icon light" style="{{ activeSettings ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}"  menu-close ng-click="settings()">
+                    Settings
+                </ion-item>
+                <ion-item class="ion-android-favorite menu-icon light" menu-close ng-click="">
+                    Rate this App
+                </ion-item>
+                <!--<ion-item class="ion-information-circled menu-icon light" menu-close ng-click="">
+                    About
+                </ion-item> -->
+                <ion-item class="ion-android-send menu-icon light" style="{{ activecheckinout ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="checkinout()">
+                   CheckIn
+                </ion-item>
+                <ion-item class="ion-log-out menu-icon light padding-bottom" style="{{ activeLogout ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="logout()">
+                    Logout
+                </ion-item>
+            </ion-list>
+        </ion-content>
+        <!--<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a> -->
+    </div>
+</ion-side-menus>
+
+
+<!--<ion-side-menus enable-menu-with-back-views="false" ng-controller="MenuController">
+    <ion-side-menu-content>
+        <ion-nav-bar class="bar-positive">
+        <ion-nav-back-button>
+        </ion-nav-back-button>
+
+        <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" ng-click="checkLogged()">
+        </button>
+        </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view name="menuContent"></ion-nav-view>
+    </ion-side-menu-content>
+
+    <ion-side-menu side="left" width="210">
+        <ion-content class="side-menu">
+            <ion-list class="menu-header">
+                <ion-item  menu-close ng-click="">
+                    <image class="menu-logo" ng-src="{{ image }}" />
+                </ion-item>
+            </ion-list>
+            <ion-list ng-show="!isLogged">
+                <ion-item class="ion-home menu-icon"  menu-close ng-click="home()">
+                    Home
+                </ion-item>
+                <ion-item class="ion-log-in menu-icon" menu-close ng-click="login()">
+                    Sign In
+                </ion-item>
+                <ion-item class="ion-person-add menu-icon" menu-close ng-click="">
+                    Sign Up
+                </ion-item>
+                <ion-item class="ion-information-circled menu-icon" menu-close ng-click="">
+                    About
+                </ion-item>
+                <ion-item class="ion-android-call menu-icon" menu-close ng-click="">
+                    Contact Us
+                </ion-item>
+            </ion-list>
+            <ion-list ng-show="isLogged">
+                <ion-item class="ion-home menu-icon" menu-close ng-click="home()">
+                    Dashboard
+                </ion-item>
+                <ion-item class="ion-android-options menu-icon" menu-close ng-click="meeting()">
+                    Attendance
+                </ion-item>
+                <ion-item class="ion-earth menu-icon" menu-close ng-click="">
+                    Request Leave
+                </ion-item>
+                <ion-item class="ion-document-text menu-icon" menu-close ng-click="">
+                    Progress Report
+                </ion-item>
+                <ion-item class="ion-person-stalker menu-icon" menu-close ng-click="">
+                    Management
+                </ion-item>
+                <ion-item class="ion-settings menu-icon" menu-close ng-click="">
+                    Settings
+                </ion-item>
+                <ion-item class="ion-android-favorite menu-icon" menu-close ng-click="">
+                    Rate This App
+                </ion-item>
+                <ion-item class="ion-information-circled menu-icon" menu-close ng-click="">
+                    About
+                </ion-item>
+                <ion-item class="ion-log-out menu-icon" menu-close ng-click="logout()">
+                    Logout
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-side-menu>
+</ion-side-menus>
+-->

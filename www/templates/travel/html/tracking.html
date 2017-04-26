@@ -1,0 +1,59 @@
+<!--
+
+   @author: Koketso Gift Matlhatsi
+   @technical-support:
+       email: Koketso42@gmail.com
+       phone: 071 530 2436 
+       
+   @page-info:
+
+        Geo-Tracking Page
+-->
+
+<ion-view view-title="Geo-Tracking" cache-view="false" on-drag-left="onDragLeft()" on-drag-right="onDragRight()" menu-close ng-init="form={}; model={}">
+    <ion-content class="background" scroll="true" overflow-scroll="false">
+        <form name="form_businesstrip" novalidate="">
+            <!-- Business Trip tab (default) -->
+            <div ng-show="isBusiness" class="card padding stable-bg transparent-9">
+                <div class="list">
+                    <b class="positive">Business Trip</b>
+                    <hr class="separator" />
+                    <p class="light">Please specify Business Trip</p>
+                    <ion-list class="positive-bg">
+                        <ion-radio class="positive" name="choice" ng-model="choice" ng-value="'Meeting'" ng-required="true">Meeting</ion-radio>
+                        <ion-radio class="positive" name="choice" ng-model="choice" ng-value="'Site Visit'" ng-required="true">Site Visit</ion-radio>
+                        <ion-radio class="positive" name="choice" ng-model="choice" ng-value="'Supplier'" ng-required="true">Supplier</ion-radio>
+                        <ion-radio class="positive" name="choice" ng-model="choice" ng-value="'Client Visit'" ng-required="true">Client Visit</ion-radio>
+                    </ion-list>
+                    <div class="error-container" ng-show="form_businesstrip.choice.$error && form_businesstrip.$submitted" ng-messages="form_businesstrip.choice.$error">
+                        <div ng-messages-include="error-list1.html"></div>
+                    </div>
+                    <button class="button button-full button-positive radius-4" ng-click="form_businesstrip.$valid && submit(choice)">Submit</button>
+                </div>
+            </div>
+
+            <!-- Personal Trip tab (default) -->
+            <div ng-show="!isBusiness" class="card padding stable-bg transparent-9">
+                <div class="list">
+                    <b class="positive">Personal Trip</b>
+                    <hr class="separator" />
+                    <label class="item-floating-label no-borders">
+                        <span class="input-label positive">Personal Trip</span>
+                        <textarea rows="12" cols="50" name="personalTrip" ng-model="model.personalTrip" placeholder="Please specify Personal Trip"></textarea>
+                    </label>
+                    <div class="full center">
+                        <button class="button button-full button-positive radius-4" ng-click="customSubmit(model.personalTrip)">Submit</button>
+                    </div>
+                </div>
+            </div>
+            </form>
+</ion-content>
+
+    <!-- tabs
+    <div class="tabs-striped tabs-background-dark tabs-color-light transparent-9">
+        <div class="tabs">
+             <a class="tab-item {{ isBusiness ? 'active' : '' }}" ng-click="business()">Business Trip</a>
+             <a class="tab-item {{ !isBusiness ? 'active' : '' }}" ng-click="personal()">Personal Trip</a>
+        </div>
+    </div> -->
+</ion-view>

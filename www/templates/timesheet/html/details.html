@@ -1,0 +1,61 @@
+<ion-view cache-view="false" view-title="Timesheet">
+    <ion-content class="padding content-background" scroll="true" overflow-scroll="false">
+        <div class="card padding stable-bg transparent-9"  ng-repeat="timesheet in timesheetDetails" >
+         
+                <div ng-show="timesheetDetails.length" ng-init="isStatus(timesheet)"class="card padding stable-bg transparent-9">
+                    <div class="list">
+                       
+                        <ion-list class="positive-bg">
+
+                            <div class="item item-icon-left positive no-background no-borders">
+                                <i class="icon ion-person light" style="font-size: 31px !important;"></i>
+                                <span class="text-note"><b>Employee Name:</b> <p>{{ timesheet.EmpName || 'N/A' }}</p></span>
+                            </div>
+
+                            <div class="item item-icon-left positive no-background no-borders">
+                                <i class="icon ion-compose" style="font-size: 31px !important;"></i>
+                                <span class="text-note">
+
+                                    <b>Morning Session:</b> <textarea rows="7" style="overflow-y: scroll;" disabled>{{ timesheet.MorningSession || 'N/A' }}</textarea>
+                                </span>
+                            </div>
+
+                            <div class="item item-icon-left positive no-background no-borders">
+                                <i class="icon ion-compose" style="font-size: 31px !important;"></i>
+                                <span class="text-note">
+
+                                    <b>Afternoon Session:</b> <textarea rows="7" style="overflow-y: scroll;" disabled>{{ timesheet.AfternoonSession || 'N/A' }}</textarea>
+                                </span>
+                            </div>
+                            <div class="item item-icon-left positive no-background no-borders">
+                                <i class="icon ion-record balanced" style="font-size: 31px !important;"></i>
+                                <span class="text-note"><b>Date:</b> <p>{{ timesheet.TimesheetDate || 'N/A' }}</p></span>
+                            </div>
+                            
+                        </ion-list>
+                    <!--ng-model="model.employee"-->
+                    </div>
+                   
+                    <div ng-show="sheet_status!= 'In Progress'">
+                    <hr class="separator" />
+                    <p class="positive" style="text-align: right !important;"><span class="icon {{ sheet_status == 'Approved' ? 'balanced ion-checkmark-round' : sheet_status == 'Declined' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ sheet_status }}</p>
+                    </div>
+
+                   <div >
+                    <button ng-show="isStatus(timesheet)" class="button button-full button-positive" ng-click="time_sheet_disaprove()">
+                    Disapprove
+                    </button>
+                    <button ng-show="isStatus(timesheet)"  class="button button-full button-balanced" ng-click="time_sheet_aprove(timesheet)">
+                    Approve
+                    </button>
+                   </div>
+                    
+                </div>
+                    
+                <p ng-show="!timesheetDetails.length" class="full center padding assertive">
+                    <b style="font-size: 18px !important;"><span class="icon ion-information-circled" style="font-size: 18px !important;"></span> Record not found!</b>
+                </p>
+         
+            </div>
+    </ion-content>
+</ion-view>

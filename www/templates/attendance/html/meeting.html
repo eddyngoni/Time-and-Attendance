@@ -1,0 +1,21 @@
+<ion-view ng-controller="MeetingController" ng-init="initializeView()" menu-close>
+    <ion-content class="background"  scroll="true">
+        <div class="card dark-bg page-header">
+            <h1 class="light">{{ meetings.length ? 'Upcoming meetings' : 'Scheduled meetings unavailabe' }} </h1>
+        </div>
+        <div class="card" ng-repeat="meeting in meetings" ng-show="!meeting.viewed">
+            <div class="card-header dark-bg">{{ meeting.title }}</div>
+            <div class="card-content">
+                {{ meeting.description }}
+                <br /><br />
+                <b>Time</b> {{ meeting.time }}<br />
+                <b>Duration:</b> {{ meeting.duration }}
+            </div>
+            <div class="card-footer">
+                <hr class="separator" />
+                <button class="button button-small button-dark" ng-click="respond($index)">Attend</button>
+                <button class="button button-small button-positive" ng-click="respond($index)">Reject</button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,51 @@
+<ion-view cache-view="false" view-title="Employee Leave Application">
+    <ion-content class="padding content-background" scroll="true" overflow-scroll="false">
+        <div class="card padding stable-bg transparent-9">
+                <div class="list">
+                    <b class="positive">Employee Travel Claim</b>
+                    <hr class="separator" />
+                    <ion-list class="positive-bg">
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-person light" style="font-size: 31px !important;"></i>
+                            <span class="text-note"><b>Employee Name:</b> <p>{{ requestObj.name || 'N/A' }}</p></span>
+                        </div>
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-record balanced" style="font-size: 31px !important;"></i>
+                            <span class="text-note"><b>Departure Address:</b> <p>{{ requestObj.slocation || 'N/A' }}</p></span>
+                        </div>
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-record assertive" style="font-size: 31px !important;"></i>
+                            <span class="text-note"><b>Destination Address:</b> <p>{{ requestObj.dlocation || 'N/A' }}</p></span>
+                        </div>
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-calendar positive" style="font-size: 31px !important;"></i>
+                            <span class="text-note"><b>Date:</b> <p>{{ requestObj.created_on || 'N/A' }}</p></span>
+                        </div>
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-clock balanced" style="font-size: 31px !important;"></i>
+                            <span class="text-note"><b>Time In:</b> <p>{{ requestObj.start_time || 'N/A' }}</p></span>
+                        </div>
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-clock assertive" style="font-size: 31px !important;"></i>
+                            <span class="text-note"><b>Time Out:</b> <p>{{ requestObj.end_time || 'N/A' }}</p></span>
+                        </div>
+                        <div class="item item-icon-left positive no-background no-borders">
+                            <i class="icon ion-compose" style="font-size: 31px !important;"></i>
+                            <span class="text-note">
+                                
+                                <b>Reason:</b> <textarea rows="7" style="overflow-y: scroll;" disabled>{{ requestObj.reason || 'N/A' }}</textarea>
+                            </span>
+                        </div>
+                        </ion-list>
+                    <div ng-show="requestObj.status != 'In Progress'">
+                        <hr class="separator" />
+                        <p class="positive" style="text-align: right !important;"><span class="icon {{ requestObj.status == 'Approved' ? 'balanced ion-checkmark-round' : requestObj.status == 'Declined' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ requestObj.status }}</p>
+                    </div>
+                    <div ng-show="requestObj.status == 'In Progress'">
+                        <button class="button button-full button-balanced radius-4" ng-click="approve(requestObj)">Approve</button>
+                        <button class="button button-full button-assertive radius-4" ng-click="reject(requestObj)">Reject</button>
+                    </div>
+                </div>
+            </div>
+    </ion-content>
+</ion-view>
