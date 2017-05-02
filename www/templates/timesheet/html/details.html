@@ -2,7 +2,7 @@
     <ion-content class="padding content-background" scroll="true" overflow-scroll="false">
         <div class="card padding stable-bg transparent-9"  ng-repeat="timesheet in timesheetDetails" >
          
-                <div ng-show="timesheetDetails.length" ng-init="isStatus(timesheet)"class="card padding stable-bg transparent-9">
+                <div ng-show="timesheetDetails.length">
                     <div class="list">
                        
                         <ion-list class="positive-bg">
@@ -36,18 +36,19 @@
                     <!--ng-model="model.employee"-->
                     </div>
                    
-                    <div ng-show="sheet_status!= 'In Progress'">
-                    <hr class="separator" />
-                    <p class="positive" style="text-align: right !important;"><span class="icon {{ sheet_status == 'Approved' ? 'balanced ion-checkmark-round' : sheet_status == 'Declined' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ sheet_status }}</p>
+                    <div ng-show="timesheet.approve == '' ? true : false">
+                        <hr class="separator" />
+                        <p class="positive" style="text-align: right !important;"><span class="icon {{ timesheet.approve == 'Y' ? 'balanced ion-checkmark-round' : timesheet.approve == 'N' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ timesheet.approve == 'Y' ? 'Approved' : timesheet.approve == 'N' ? 'Declined' : 'In-Progress' }}</p>
                     </div>
 
-                   <div >
-                    <button ng-show="isStatus(timesheet)" class="button button-full button-positive" ng-click="time_sheet_disaprove()">
-                    Disapprove
+                   <div ng-show="timesheet.approve != '' ? true : false">
+                    <button class="button button-full button-positive" ng-click="time_sheet_disaprove(timesheet, $index)">
+                        Declined
                     </button>
-                    <button ng-show="isStatus(timesheet)"  class="button button-full button-balanced" ng-click="time_sheet_aprove(timesheet)">
-                    Approve
+                    <button  class="button button-full button-balanced" ng-click="time_sheet_aprove(timesheet, $index)">
+                        Approve
                     </button>
+                       </div>
                    </div>
                     
                 </div>

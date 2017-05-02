@@ -139,8 +139,12 @@
                             </div>
                             <label class="no-borders">
                                 <small class="positive">Approver</small>
-                                <select name="approver" ng-model="model.approver" ng-options="manager.username for manager in managers track by manager.id" ng-required="true">
+                                <!--<select name="approver" ng-model="model.approver" ng-options="manager.username for manager in managers track by manager.id" ng-required="true">
                                     <option value="">-Select-</option>
+                                </select> -->
+                                <select name="approver" ng-model="model.approver" ng-required="true">
+                                    <option value="">-Select-</option>
+                                    <option value="">{{ report_to }}</option>
                                 </select>
                             </label>
                             <div class="error-container" ng-show="form_travel.approver.$error && form_travel.$submitted" ng-messages="form_travel.approver.$error">
@@ -157,8 +161,8 @@
     <div class="tabs-striped tabs-background-dark tabs-color-light transparent-9">
         <div class="tabs">
              <a ng-show="isManager" class="tab-item {{ isRequest ? 'active' : '' }}" ng-click="request()">Travel Requests</a>
-             <a class="tab-item {{ isTrip ? 'active' : '' }}" ng-click="myTrips()">My Trips</a>
-             <a class="tab-item {{ isCustom ? 'active' : '' }}" ng-click="customTrip()">Custom Travel</a>
+             <a ng-show="!isAdmin" class="tab-item {{ isTrip ? 'active' : '' }}" ng-click="myTrips()">My Trips</a>
+             <a ng-show="!isAdmin" class="tab-item {{ isCustom ? 'active' : '' }}" ng-click="customTrip()">Custom Travel</a>
         </div>
     </div>
 </ion-view>

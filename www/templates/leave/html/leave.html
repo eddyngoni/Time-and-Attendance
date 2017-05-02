@@ -110,10 +110,15 @@
                             </div>
                             <label class="no-borders">
                                 <small class="positive">Approver</small>
-                                <select name="approver" ng-model="model.approver" ng-options="manager.username for manager in managers track by manager.id" ng-required="true">
+                                <!--<select name="approver" ng-model="model.approver" ng-options="manager.username for manager in managers track by manager.id" ng-required="true">
                                     <option>--select--</option>
+                                </select>-->
+                                <select name="approver" ng-model="model.approver" ng-required="true">
+                                    <option>--select--</option>
+                                    <option>{{ report_to }}</option>
                                 </select>
                             </label>
+                            
                             <div class="error-container" ng-show="form_leave.approver.$error && form_leave.$submitted" ng-messages="form_leave.approver.$error">
                                 <div ng-messages-include="error-list1.html"></div>
                             </div>

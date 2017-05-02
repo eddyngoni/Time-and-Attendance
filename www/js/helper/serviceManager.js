@@ -4,7 +4,7 @@ function CallGetServive($http, ServiceEndPoint, callBack) {
 		method: 'GET',
         cache: false,
         headers: {
-            'Cache-Control' : 'no-cache',
+            //'Cache-Control' : 'no-cache',
             'Content-Type': 'application/json; charset=utf-8'
         },
 		url: ServiceEndPoint

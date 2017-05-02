@@ -40,7 +40,7 @@
                 <ion-item class="ion-home menu-icon light" style="{{ activeHome ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="home()">
                     Dashboard
                 </ion-item>
-                <ion-item class="ion-map menu-icon light" style="{{ activeTrip ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="tracking()">
+                <ion-item ng-show="!isAdmin" class="ion-map menu-icon light" style="{{ activeTrip ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="tracking()">
                     Bussiness Trip
                 </ion-item>
                 <ion-item class="ion-speedometer menu-icon light" style="{{ activeTravel ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="travel()">
@@ -64,7 +64,7 @@
                 <!--<ion-item class="ion-information-circled menu-icon light" menu-close ng-click="">
                     About
                 </ion-item> -->
-                <ion-item class="ion-android-send menu-icon light" style="{{ activecheckinout ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="checkinout()">
+                <ion-item ng-show="!isAdmin" class="ion-android-send menu-icon light" style="{{ activecheckinout ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="checkinout()">
                    CheckIn
                 </ion-item>
                 <ion-item class="ion-log-out menu-icon light padding-bottom" style="{{ activeLogout ? 'background: #c92026 !important; border-left: 5px solid #000 !important;' : '' }}" menu-close ng-click="logout()">

@@ -1,10 +1,10 @@
 <ion-view cache-view="false" view-title="Settings" hide-nav-bar="false">
-  <ion-content class="afterLogin" ng-controller="SettingsController">
+  <ion-content class="afterLogin" ng-controller="SettingsController" scroll="true">
       <div class="content">
         <form method="post" name="SettingsForm" ng-model="settingsForm" novalidate>  
             
             <div class="card padding">
-                <div class="list">
+                <div class="list" ng-show="!isOpen">
                     <b class="positive">User controls</b>
                     <hr class="separator" />
                     <ion-list class="positive-bg">
@@ -32,8 +32,55 @@
                         <p class="assertive">Your device doesn't support Fingerprint Authentication!</p>
                     </div>
                 </div>
+            </form>
+
+            <form name="SetForm" novalidate>
+            <div ng-show="!isOpen" class="full center">
+            <button class="button button-full button-positive radius-4" ng-click="openSetPassword()">Change password</button>
+            <!--<button class="button button-small button-clear button-positive radius-4">Forgot Password?</button>-->
+            </div>
+            <div ng-show="isOpen" >
+            <div class="list">
+            <b class="positive">Set a new password</b>
+                <label class="item-floating-label no-borders" ng-class="{ 'has-errors' : SetForm.new_pwd.$invalid && SetForm.$submitted, 'no-errors' : SetForm.new_pwd.$valid}">
+                <span class="input-label positive">New password</span>
+                <input type="text" placeholder="New password" name="new_pwd" ng-model="new_pwd" ng-change="SetForm.$valid" required>
+
+                <!--  Username Error validation  -->
+                <div class="error-container" ng-show="isEmpty" ng-messages="SetForm.new_pwd.$error">
+                  <div ng-messages-include="error-list.html"></div>
+                </div>
+                <div ng-show="islength" style="color: #ff0000; margin-top:-8px; text-align: left;">
+                    <i class="ion-information-circled"></i>
+                    Minimum length of this field is 6 characters!
+                </div>
+                </label>
+
+                <div class="full center">
+                <button class="button button-full button-positive radius-4" ng-click="setPassword(new_pwd)">Set</button>
+                <button class="button button-small button-clear button-positive radius-4" ng-click="closeCard()">Close</button>
+                </div>
+            </div>
+            </div>
             </div>  
+
+            
         </form>
+
       </div>
   </ion-content>
+  <script id="error-list.html" type="text/ng-template">
+        <div class="positive" ng-message="required" style="color: #ff0000; margin-top:-8px; text-align: left;">
+            <i class="ion-information-circled"></i>
+            This field is required!
+        </div>
+        <div class="error" ng-message="minlength">
+            <i class="ion-information-circled"></i>
+            Minimum length of this field is 5 characters!
+        </div>
+        <div class="error" ng-message="maxlength">
+            <i class="ion-information-circled"></i>
+            Maximum length of this field is 20 characters!
+        </div>
+    </script>
 </ion-view>

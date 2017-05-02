@@ -22,17 +22,18 @@ rootController.controller('LeaveController', function ($http,$state, $scope, $io
     var address;
     var method;
     var ServiceEndPoint;
-
+    var parameter;
     var managers = window.globals.managers;
     var users = window.globals.users;
+    $scope.report_to = window.globals.SESSION.user.reported_to;
     
-    if (jQuery.isEmptyObject(managers)) {
+    //if (jQuery.isEmptyObject(managers)) {
        
         address = globals.ServiceAddress;
         method = globals.WebMethods.manager;
-
-        ServiceEndPoint = address + method;
-        console.log(ServiceEndPoint);
+        parameter = "?user_role=" + users.user_role;
+        ServiceEndPoint = address + method +parameter;
+        //console.log(ServiceEndPoint);
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
 
@@ -56,7 +57,7 @@ rootController.controller('LeaveController', function ($http,$state, $scope, $io
             else
                 alert("System error in Managers API");
         });
-    }
+    //}
    
     $scope.managers = managers;
 

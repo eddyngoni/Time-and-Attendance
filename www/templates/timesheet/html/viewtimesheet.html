@@ -1,8 +1,20 @@
+
+<!--
+
+   @author: Emmanuel Mulea
+   @technical-support:
+       email: nocksmulea@gmail.com
+       phone: 064 933 2370 
+       
+   @page-info:
+
+    View time sheet Page
+-->
 <ion-view cache-view="false" view-title="Timesheet">
     <ion-content class="padding content-background" scroll="true" overflow-scroll="false">
         <div class="card padding stable-bg transparent-9"  ng-repeat="timesheet in timesheetDetails" >
          
-                <div ng-show="timesheetDetails.length" ng-init="isStatus(timesheet);auto_timesheet_apporve(timesheet);"class="card padding stable-bg transparent-9">
+                <div ng-show="timesheetDetails.length" ng-init="auto_timesheet_apporve(timesheet, $index);" >
                     <div class="list">
                        
                         <ion-list class="positive-bg">
@@ -38,7 +50,7 @@
                    
                    <div >
                     <hr class="separator" />
-                    <p class="positive" style="text-align: right !important;"><span class="icon {{ sheet_status == 'Approved' ? 'balanced ion-checkmark-round' : sheet_status == 'Declined' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ sheet_status }}</p>
+                    <p class="positive" style="text-align: right !important;"><span class="icon {{ timesheet.approve == 'Y' ? 'balanced ion-checkmark-round' : timesheet.approve == 'N' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ timesheet.approve == 'Y' ? 'Approved' : timesheet.approve == 'N' ? 'Declined' : 'In-Progress' }}</p>
                     </div>
                     
                 </div>

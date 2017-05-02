@@ -10,6 +10,9 @@
 
 // this is the MenuController were the app's navigation takes place
 rootController.controller('MenuController', function($ionicPlatform, $http, $window,$state, $rootScope, $scope, $timeout, $ionicHistory,$cordovaGeolocation,$ionicPopup,$interval,GeoAlert) {
+    
+    $scope.isAdmin = window.globals.isAdmin;
+    
     $scope.checkLogged = function() {
         $scope.isLogged = window.isLoggedG;
     };
@@ -17,6 +20,7 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
 	$interval( function() {
 
 		$scope.checkLogged();
+        $scope.isAdmin = window.globals.isAdmin;
 	}, 100);
     var users = window.globals.users;
     var locations = window.globals.locations;
@@ -30,6 +34,7 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
     var ServiceEndPoint;
     var latitude;
     var longitude;
+
     $rootScope.activeHome = true;
     $rootScope.activeLogin = false;
     $rootScope.activeMeeting = false;
@@ -202,8 +207,13 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
         $rootScope.activeTrip = false;
         $rootScope.activeTimesheet = true;
         $rootScope.activecheckinout = false;
+
+        $ionicHistory.nextViewOptions({
+            disableBack: true
+        });
     };
-        $scope.checkinout = function () {
+    
+    $scope.checkinout = function () {
         
         $state.go('app.checkinout', null, { reload: true });
 
@@ -221,6 +231,7 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
             disableBack: true
         });
     };
+
     $scope.logout = function() {
         window.isLoggedG = false;
         
@@ -236,9 +247,21 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
         $rootScope.activecheckinout = false;
         $rootScope.activeLogout = false;
         
+        window.globals.users = [];
+        window.globals.employees = [];
+        window.globals.employeetimesheet = [];
+        window.globals.locations = [];
+        window.globals.managers = [];
+        window.globals.loginUserslocation = [];
+        window.globals.claimsList = [];
+        window.globals.LeaverequestsList = [];
+
+        window.globals.isAdmin = false;
+        window.globals.isManager = false;
+
         $timeout( function() {
             
-           $state.go('app.login', null, { reload: true });
+           $scope.login();
 
             window.isLoggedG = false;
         }, 600);

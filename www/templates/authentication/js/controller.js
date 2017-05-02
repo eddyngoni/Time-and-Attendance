@@ -9,7 +9,7 @@
  */
 
 // 
-rootController.controller('LoginController', function ($ionicPlatform, $http, $window, $state, $rootScope, $scope, $ionicHistory, $timeout, $cordovaGeolocation, $interval, $cordovaFingerprint, $ionicPopup, GeoAlert) {
+rootController.controller('LoginController', function ($ionicPlatform, $http, $window, $state, $rootScope, $scope, $ionicHistory, $timeout, $cordovaGeolocation, $interval, $cordovaFingerprint,$ionicLoading, $ionicPopup, GeoAlert) {
     
     $scope.onDragLeft = function() {
         closeNav();
@@ -151,6 +151,9 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
 
         parameter = "?username=" + username + "&pwd=" + password;
         var ServiceEndPoint = address + method + parameter;
+         $ionicLoading.show({
+        template: 'Authenticating...'
+        });
         
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
@@ -164,19 +167,19 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
 
                 users = response.data.user_details;
                 window.globals.users = users;
-
+                $ionicLoading.hide();
                 //alert(window.globals.SESSION.user.user_role);
                 //window.globals.UserSession.window.globals.UserSession.user = response.data.user_details;
 
                 if (users.user_role === "1") {
-                window.globals.isAdmin = true;
+                    window.globals.isAdmin = true;
                 }
                 else if (users.user_role === "2") {
-                window.globals.isManager = true;
+                    window.globals.isManager = true;
                 }
                 else {
-                window.globals.isAdmin = false;
-                window.globals.isManager = false;
+                    window.globals.isAdmin = false;
+                    window.globals.isManager = false;
                  }
             window.isLoggedG = true;
             var popup = $ionicPopup.show({
@@ -242,9 +245,10 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
             else {
 
                 //alert("System Error in login api");
+                $ionicLoading.hide();
                 var popup = $ionicPopup.show({
                         title: 'System Error',
-                        template: 'System Error in login api',
+                        template: 'Check internet connection',
                         buttons: [
                             {
                                 text: '<b>OK</b>',
@@ -291,12 +295,79 @@ rootController.controller('RegisterController', function ($state, $rootScope, $s
     });
 });
 
-rootController.controller('SettingsController', function($ionicPlatform, $window, $state, $scope, $ionicHistory, $ionicPopup, $cordovaFingerprint, $ionicLoading) {
+rootController.controller('SettingsController', function($ionicPlatform, $window,$http, $state, $scope, $ionicHistory, $ionicPopup, $cordovaFingerprint, $ionicLoading) {
     
     $scope.fingerprint = false;
     $scope.isAvailable = false;
     $scope.isStored = false;
+    $scope.isOpen = false;
+    $scope.new_pwd;
+    $scope.isEmpty=false;
+    $scope.islength=false;
+    var address;
+    var method;
+    var new_password;
+   // $scope.new_pwd;
+    var user = window.globals.users;
 
+
+    
+    $scope.openSetPassword = function()
+    {
+        $scope.isOpen=true;
+
+    }
+    $scope.setPassword = function(new_pwd)
+    {
+        if(new_pwd!=null && new_pwd!=undefined)
+        {
+         if(new_pwd.length>=6)
+         {
+            $scope.islength = false;
+            address = globals.ServiceAddress;
+            method = globals.WebMethods.SetPassword;
+            parameter = "?user_id=" + user.id + "&pwd="+new_pwd;
+            var ServiceEndPoint = address + method + parameter;
+            $ionicLoading.show({
+            template: 'Please wait...'
+            });
+            
+            CallGetServive($http, ServiceEndPoint, function (response) {
+                if(response != null) {
+                    $ionicLoading.hide();
+                    showToast("password successfully changed");
+                    $scope.isOpen=false;
+                }
+                else
+                {
+                    $ionicLoading.hide();
+                    showToast("password did not change!");
+                    $scope.isOpen=false;
+                }
+            });
+
+
+         }
+         else
+         {
+           $scope.islength = true;
+         }
+        }
+        else
+        {
+            
+            $scope.isEmpty=true;
+        }
+                                              
+                
+
+    }
+    $scope.closeCard = function()
+    {
+        $scope.isOpen=false;
+        $scope.isEmpty=false;
+        $scope.islength = false;
+    }
     if($window.localStorage['pss-fingerprint'] != null) {
 
         $scope.isStored = true;

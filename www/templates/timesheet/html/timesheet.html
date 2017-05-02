@@ -126,9 +126,9 @@
     <div class="tabs-striped tabs-background-dark tabs-color-light transparent-9">
         <div class="tabs">
 
-            <a ng-show="!isAdmin" class="tab-item {{ isNew ? 'active' : '' }}" ng-click="submitTimesheet()">New Application</a>
             <a ng-show="isManager" class="tab-item {{ isEmpTab ? 'active' : '' }}" ng-click="getTimesheets()">Timesheets</a>
-            <a ng-show="!isAdmin" class="tab-item {{ isView ? 'active' : '' }}" ng-click="getview()">View Timesheets</a>
+            <a ng-show="!isAdmin" class="tab-item {{ isView ? 'active' : '' }}" ng-click="getview()">My Timesheets</a>
+            <a ng-show="!isAdmin" class="tab-item {{ isNew ? 'active' : '' }}" ng-click="submitTimesheet()">New Application</a>
             
             
         </div>

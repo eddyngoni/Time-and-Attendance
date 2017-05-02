@@ -21,8 +21,12 @@
                         </label>
                         <label class="no-borders">
                             <small class="positive">Approver</small>
-                            <select name="approver" ng-required="true" ng-model="model.approver" ng-change="changedValue(model.approver)" ng-options="manager.username for manager in managers track by manager.id ">
+                            <!--<select name="approver" ng-required="true" ng-model="model.approver" ng-change="changedValue(model.approver)" ng-options="manager.username for manager in managers track by manager.id ">
                                 <option value="">-Select-</option>
+                            </select> -->
+                            <select name="approver" ng-required="true" ng-model="model.approver" ng-change="changedValue(model.approver)">
+                                <option value="">-Select-</option>
+                                <option value="">{{ report_to }}</option>
                             </select>
                         </label>
                         <div class="error-container" ng-show="form_map.approver.$error && form_map.$submitted" ng-messages="form_map.approver.$error">

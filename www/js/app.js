@@ -35,7 +35,8 @@ window.globals = {
         gettimesheets: "GetTimesheets",
         submittimesheet: "TimesheetApplication",
         getallemployees: "GetAllEmployees",
-        ApproveTimeSheet_func:"ApproveTimeSheet_func"
+        ApproveTimeSheet_func:"ApproveTimeSheet_func",
+        SetPassword:"SetPassword"
 
     },
 
@@ -48,28 +49,15 @@ window.globals = {
         user: null,
         userLeaveRequestsList: [],
         userClaimsList: []
-    },
-
-    users: {              //for login user data
 
     },
 
-    employees: {              //for all employees
-
-    },
-    employeetimesheet: {              //for all employee timesheet
-
-    },
-
-    locations: {           // for storing all pss office locations
-
-
-    },
-
-    managers:{ },
-
-    loginUserslocation:{}, 
-
+    users: [],
+    employees: [],
+    employeetimesheet: [],
+    locations: [],
+    managers: [],
+    loginUserslocation: [], 
     claimsList: [],              //for BusinessTips
     LeaverequestsList: [],      // for LeaveRequests
     isAdmin:false,
@@ -113,7 +101,7 @@ app.run(function ($ionicPlatform, $rootScope) {
     });
 });
 
-app.config(['$httpProvider', function($httpProvider) {
+/*app.config(['$httpProvider', function($httpProvider) {
     //initialize get if not there
     if (!$httpProvider.defaults.headers.get) {
         $httpProvider.defaults.headers.get = {};    
@@ -127,7 +115,7 @@ app.config(['$httpProvider', function($httpProvider) {
     // extra
     $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
     $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
-}]);
+}]);*/
 
 app.config(function ($stateProvider, $urlRouterProvider) {
 
@@ -360,7 +348,7 @@ app.factory("DistanceMetrix", function($http) {
                 method: 'GET',
                 cache: false,
                 headers: {
-                    'Cache-Control' : 'no-cache',
+                    //'Cache-Control' : 'no-cache',
                     'Content-Type': 'application/json; charset=utf-8'
                 },
                 url: ServiceEndPoint

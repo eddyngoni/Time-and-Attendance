@@ -21,6 +21,7 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
 
     var address = globals.ServiceAddress;
     var method;
+    var param;
     var ServiceEndPoint;
 
     var employees = window.globals.employees;
@@ -29,9 +30,10 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
     if (jQuery.isEmptyObject(employees)) {
        
         //address = globals.ServiceAddress;
-        method = globals.WebMethods.getallemployees;
+        method = window.globals.WebMethods.getallemployees;
+        param = "?username=" + window.globals.SESSION.user.username + "&user_role=" + window.globals.SESSION.user.user_role;
         
-        ServiceEndPoint = address + method;
+        ServiceEndPoint = address + method + param;
         console.log(ServiceEndPoint);
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
@@ -106,7 +108,7 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
         //address = globals.ServiceAddress;
         method = globals.WebMethods.gettimesheets;
         var parameter = "?userId=" + users.id + "&fromdate=" + Fdate + "&todate=" + Tdate;
-        ServiceEndPoint = address + method+parameter;
+        ServiceEndPoint = address + method + parameter;
         console.log(ServiceEndPoint);
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
@@ -116,7 +118,7 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
                     //$scope.managers = managers;
                     
                     window.globals.employeetimesheet = response.data.GetTimesheets;
-                    $state.go('app.timesheetview', null, { reload: true });
+                    $state.go('app.timesheetview');
 
                 }
                 else
@@ -172,7 +174,7 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
         //address = globals.ServiceAddress;
         method = globals.WebMethods.gettimesheets;
         var parameter = "?userId=" + empid + "&fromdate=" + Fdate + "&todate=" + Tdate;
-        ServiceEndPoint = address + method+parameter;
+        ServiceEndPoint = address + method + parameter;
         console.log(ServiceEndPoint);
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
@@ -196,17 +198,18 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
         
         //$state.go('app.leaveDetails', { 'context': JSON.stringify(request) });
     };
-    
-    $scope.isEmpTab = $scope.isManager;
-    $scope.isNew = true;
-    $scope.isView= false;
 
-    if ($scope.isManager || $scope.isAdmin) {
-        $scope.isEmpTab = true;
-        $scope.isNew = false;
+    if(!$scope.isManager && $scope.isAdmin) {
+        $scope.isManager = $scope.isAdmin;
     }
 
- 
+    $scope.isEmpTab = $scope.isManager;
+    $scope.isView = false;
+    $scope.isNew = false;
+
+    if(!$scope.isManager) {
+        $scope.isView = true;
+    }    
 
     $scope.submitTimesheet = function () {
 
@@ -266,12 +269,13 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
 
         var start = new Date(timesheetdate);
         var date = (start.getUTCDate()+1) + " " + toMonth(start.getMonth()+1) + " " + start.getFullYear();
+        var user = window.globals.SESSION.user;
         
         //alert(globals.WebMethods.submittimesheet);
         
         method = globals.WebMethods.submittimesheet;
         //alert(method);
-        var parameter = "?userId=" + users.id + "&name=" + users.firstName + " " + users.lastName + " " + users.surName + "&morningsession=" + morningsession + "&afternoonsession=" + afternoonsession + "&timesheetdate=" + date ;
+        var parameter = "?userId=" + user.id + "&name=" + user.firstName + " " + user.lastName + " " + user.surName + "&morningsession=" + morningsession + "&afternoonsession=" + afternoonsession + "&timesheetdate=" + date ;
         //var paremeter = "?username=patchala&password=wildlife";
         //alert(parameter);
         ServiceEndPoint = address + method + parameter;
@@ -307,16 +311,17 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
     
     $scope.timesheetDetails = employeetimesheet;
     // Approve Time Sheet
-    $scope.isStatus = function (timesheet)
+    $scope.isStatus = function (timesheet, index)
     {
             if(timesheet.approve=='Y')
             {
             $scope.sheet_status="Approved";
+            (window.globals.employeetimesheet)[index].approve = timesheet.approve;
             return false;
             }
             else if(timesheet.approve=='N')
             {
-            $scope.sheet_status="Diclined";
+            $scope.sheet_status="Declined";
             return false;
             }
             else
@@ -326,7 +331,7 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
             }
     
     }
-     $scope.time_sheet_aprove = function (timesheet) {
+     $scope.time_sheet_aprove = function (timesheet, index) {
 
         method = globals.WebMethods.ApproveTimeSheet_func;
         //alert(method);
@@ -341,7 +346,8 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
 
                     
                     showToast("successfully approved");
-                     $state.go('app.timesheetDetails', null, { reload: true });
+                    timesheet.approve = 'Y';
+                    $scope.isStatus(timesheet, index);
                    // $scope.model = null;
                 }
             }
@@ -356,7 +362,7 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
 
    
 //Disapprove time sheet
-    $scope.time_sheet_disaprove = function (timesheet) {
+    $scope.time_sheet_disaprove = function (timesheet, index) {
 
         method = globals.WebMethods.ApproveTimeSheet_func;
         //alert(method);
@@ -371,7 +377,8 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
 
                     
                     showToast("successfully Disapproved");
-                    $state.go('app.timesheetDetails', null, { reload: true });
+                    timesheet.approve = 'N';
+                    $scope.isStatus(timesheet, index);
   
                    // $scope.model = null;
                 }
@@ -379,32 +386,34 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
         });
     };
 
-    $scope.auto_timesheet_apporve = function (timesheet){
+    $scope.auto_timesheet_apporve = function (timesheet, index){
 
         method = globals.WebMethods.ApproveTimeSheet_func;
         var oneDay = 24*60*60*1000;
         var today = new Date();
-        var date_submited = new Date(timesheet.TimesheetDate);
+        var date_submited = new Date(timesheet.Created_On);
         var diffDays = Math.round(Math.abs((date_submited.getTime()-today.getTime())/(oneDay)));
+        var user = window.globals.SESSION.user;
         
-        if(diffDays>3)
-        {
-        var parameter = "?userId=" + users.id + "&timesheet=" + timesheet.TimesheetDate+'&status=Y';
-        //var paremeter = "?username=patchala&password=wildlife";
-        //alert(parameter);
-        ServiceEndPoint = address + method + parameter;
-        CallGetServive($http, ServiceEndPoint, function (response) {
-            if (response != null) {
+        if(diffDays>4 && timesheet.approve==null) {
+            
+            var parameter = "?userId=" + timesheet.Id + "&timesheet=" + timesheet.TimesheetDate+'&status=Y';
+            //var paremeter = "?username=patchala&password=wildlife";
+            //alert(parameter);
+            ServiceEndPoint = address + method + parameter;
 
-                if (response.data.st !== "") {
+            CallGetServive($http, ServiceEndPoint, function (response) {
+                if (response != null) {
 
+                    if (response.data.st !== "") {
+
+                        timesheet.approve = 'Y';
+                        $scope.isStatus(timesheet, index);
+                    }
                 }
-            }
-        });
-
-       
-        
-    };
+            });
+            
+        }
     }
 
 });

@@ -49,6 +49,20 @@
             </div>
         </form>
     </ion-content>
+    <script id="error-list.html" type="text/ng-template">
+        <div class="positive" ng-message="required" style="color: #ff0000; margin-top:-8px; text-align: left;">
+            <i class="ion-information-circled"></i>
+            This field is required!
+        </div>
+        <div class="error" ng-message="minlength">
+            <i class="ion-information-circled"></i>
+            Minimum length of this field is 5 characters!
+        </div>
+        <div class="error" ng-message="maxlength">
+            <i class="ion-information-circled"></i>
+            Maximum length of this field is 20 characters!
+        </div>
+    </script>
 </ion-view>
 
 
@@ -96,18 +110,3 @@
             </form>
 </ion-content>
 </ion-view>   -->
-
-<script id="error-list.html" type="text/ng-template">
-    <div class="positive" ng-message="required" style="color: #ff0000; margin-top:-8px; text-align: left;">
-        <i class="ion-information-circled"></i>
-        This field is required!
-    </div>
-    <div class="error" ng-message="minlength">
-        <i class="ion-information-circled"></i>
-        Minimum length of this field is 5 characters!
-    </div>
-    <div class="error" ng-message="maxlength">
-        <i class="ion-information-circled"></i>
-        Maximum length of this field is 20 characters!
-    </div>
-</script>

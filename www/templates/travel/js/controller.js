@@ -59,6 +59,7 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
     var managers = window.globals.managers;
     var users = window.globals.users;
     $scope.offices = window.globals.locations;
+    $scope.report_to = window.globals.SESSION.user.reported_to;
     
     if (jQuery.isEmptyObject(managers)) { //checking managers varialbe 
         
@@ -417,8 +418,9 @@ rootController.controller('MapController', function ($state, $http, $stateParams
     //$scope.offices = locations
 
     $scope.requestObj = 0;
-   var address = globals.ServiceAddress;
-   var method = globals.WebMethods.manager;
+    var address = globals.ServiceAddress;
+    var method = globals.WebMethods.manager;
+    $scope.report_to = window.globals.SESSION.user.reported_to;
 
     var ServiceEndPoint = address + method ;
     console.log(ServiceEndPoint);
@@ -445,6 +447,7 @@ rootController.controller('MapController', function ($state, $http, $stateParams
     var pss35PlaceId = "ChIJqbzRKcBylR4RlgCGc5ZNODs";
     $scope.from = window.globals.loginUserslocation.address;
     $scope.isManager = window.globals.isManager;
+    $scope.isAdmin = window.globals.isAdmin;
 
     var options = { enableHighAccuracy: true, maximumAge: 30000, timeout: 27000 };
 

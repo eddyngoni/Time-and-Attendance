@@ -1,0 +1,14 @@
+{
+  "name": "jquery-browser-fingerprint",
+  "homepage": "https://github.com/carlo/jquery-browser-fingerprint",
+  "_release": "957d179f1e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "957d179f1e878260e11b84b55190c4808e15ed2c"
+  },
+  "_source": "https://github.com/carlo/jquery-browser-fingerprint.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/carlo/jquery-browser-fingerprint.git",
+  "_direct": true
+}
