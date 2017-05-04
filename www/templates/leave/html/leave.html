@@ -113,9 +113,9 @@
                                 <!--<select name="approver" ng-model="model.approver" ng-options="manager.username for manager in managers track by manager.id" ng-required="true">
                                     <option>--select--</option>
                                 </select>-->
-                                <select name="approver" ng-model="model.approver" ng-required="true">
+                                <select name="approver"  ng-model="model.approver" ng-required="true">
                                     <option>--select--</option>
-                                    <option>{{ report_to }}</option>
+                                    <option ng-value="report_to">{{report_to }}</option>
                                 </select>
                             </label>
                             
@@ -123,7 +123,7 @@
                                 <div ng-messages-include="error-list1.html"></div>
                             </div>
                         </ion-list>
-                        <button class="button button-full button-positive radius-4" ng-click="form_leave.$valid && apply(model.type, model.startDate, model.endDate, model.comments, model.approver.username)">Submit</button>
+                        <button class="button button-full button-positive radius-4" ng-click="form_leave.$valid && apply(model.type, model.startDate, model.endDate, model.comments, model.approver)">Submit</button>
                     </div>
                 </div>
             </div>

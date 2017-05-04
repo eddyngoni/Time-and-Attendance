@@ -38,11 +38,11 @@
                                     <i class="icon ion-person light" style="font-size: 31px !important;"></i>
                                     <span class="text-note"><b>Approver:</b> <p>{{ requestObj.approver || 'N/A' }}</p></span>
                                 </div>
-                                <div class="item item-icon-left positive no-background no-borders">
+                                <div class="item item-icon-left positive no-background no-borders item-text-wrap ">
                                     <i class="icon ion-record balanced" style="font-size: 31px !important;"></i>
                                     <span class="text-note"><b>Departure Address:</b> <p>{{ requestObj.slocation || 'N/A' }}</p></span>
                                 </div>
-                                <div class="item item-icon-left positive no-background no-borders">
+                                <div class="item item-icon-left positive no-background no-borders item-text-wrap">
                                     <i class="icon ion-record assertive" style="font-size: 31px !important;"></i>
                                     <span class="text-note"><b>Destination Address:</b> <p>{{ requestObj.dlocation || 'N/A' }}</p></span>
                                 </div>
@@ -50,14 +50,14 @@
                                     <i class="icon ion-calendar positive" style="font-size: 31px !important;"></i>
                                     <span class="text-note"><b>Date:</b> <p>{{ requestObj.created_on || 'N/A' }}</p></span>
                                 </div>
-                                <div class="item item-icon-left positive no-background no-borders">
+                                <!--<div class="item item-icon-left positive no-background no-borders">
                                     <i class="icon ion-clock balanced" style="font-size: 31px !important;"></i>
                                     <span class="text-note"><b>Time In:</b> <p>{{ requestObj.start_time || 'N/A' }}</p></span>
                                 </div>
                                 <div class="item item-icon-left positive no-background no-borders">
                                     <i class="icon ion-clock assertive" style="font-size: 31px !important;"></i>
                                     <span class="text-note"><b>Time Out:</b> <p>{{ requestObj.end_time || 'N/A' }}</p></span>
-                                </div>
+                                </div>-->
                                 <div class="item item-icon-left positive no-background no-borders">
                                     <i class="icon ion-compose" style="font-size: 31px !important;"></i>
                                     <span class="text-note">
@@ -142,16 +142,16 @@
                                 <!--<select name="approver" ng-model="model.approver" ng-options="manager.username for manager in managers track by manager.id" ng-required="true">
                                     <option value="">-Select-</option>
                                 </select> -->
-                                <select name="approver" ng-model="model.approver" ng-required="true">
-                                    <option value="">-Select-</option>
-                                    <option value="">{{ report_to }}</option>
+                                <select name="approver" ng-required="true" ng-model="model.approver" ng-change="changedValue(model.approver)">
+                                <option value="">-Select-</option>
+                                <option ng-value="report_to">{{report_to }}</option>
                                 </select>
                             </label>
                             <div class="error-container" ng-show="form_travel.approver.$error && form_travel.$submitted" ng-messages="form_travel.approver.$error">
                                 <div ng-messages-include="error-list1.html"></div>
                             </div>
                         </ion-list>
-                        <button class="button button-full button-positive radius-4" ng-click="form_travel.$valid && logTrip(model.reason, model.office.title, model.from, model.to, model.date, model.time, model.timeArrived, model.distance, model.approver.username)">Log Travel</button>
+                        <button class="button button-full button-positive radius-4" ng-click="form_travel.$valid && logTrip(model.reason, model.office.title, model.from, model.to, model.date, model.time, model.timeArrived, model.distance, model.approver)">Log Travel</button>
                     </div>
                 </div>
             </div>

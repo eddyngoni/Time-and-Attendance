@@ -419,8 +419,9 @@ for (var x = 0; x < locations.length; x++) {
 
     $scope.initializeView = function () {
 
-            getCurrentLocations();
             getOfficeLocations();
+            getCurrentLocations();
+
             if(window.localStorage.getItem('Ischeckin'))
             {
             $scope.check= window.localStorage.getItem('Ischeckin');

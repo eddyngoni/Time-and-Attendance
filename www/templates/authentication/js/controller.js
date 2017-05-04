@@ -132,7 +132,11 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
 
                 $ionicPopup.alert({
                     title: 'System Warning',
-                    template: `<b>Fingerprint</b> Authentication is deactivated, you can enable it by going to this app's <b>Settings</b> and enable <b>Fingerprint Authentication</b>.`
+                    template: "<h3>\
+                                <b>Fingerprint</b> Authentication is deactivated, you can enable it by going to this app's\
+                                <b>Settings</b> and enable\
+                                <b>Fingerprint Authentication</b>.\
+                                </h3>"
                 }).then(function(res) {
                    
                 });
@@ -184,16 +188,17 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
             window.isLoggedG = true;
             var popup = $ionicPopup.show({
             title: 'Confirmation',
-            template: `<p>To continue, let your device turn on location using Google's location service.
-                        <br /> <br />
-                        <b>Your device will need to:</b>
-                        <br/><br/>
-                        <span class="icon ion-android-locate dark"></span> Use GPS, WiFi and cell networks
-                        <br/><br/>
-                        This may change the location mode you've selected for your device. For more details, go to:
-                        <br/>
-                        <b>Settings > Location</b></p>
-            `,
+            template: "<p>\
+                        To continue, let your device turn on location using Google's location service.\
+                        <br /> <br />\
+                        <b>Your device will need to:</b>\
+                        <br/><br/>\
+                        <span class='icon ion-android-locate dark'></span> Use GPS, WiFi and cell networks\
+                        <br/><br/>\
+                        This may change the location mode you've selected for your device. For more details, go to:\
+                        <br/>\
+                        <b>Settings > Location</b>\
+                    </p>",
             buttons: [
                 {
                     text: '<span class="icon ion-checkmark"></span>',
@@ -202,15 +207,14 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
 
                         $state.go('app.home', null, { reload: true });
                         $rootScope.activeHome = true;
-
+                        
                         showToast("Welcome " + users.firstName + " " + users.lastName);
-
+                        
                         $ionicHistory.nextViewOptions({
                             disableBack: true
                         });
                     }
-                },
-                { text: '<span class="icon ion-close positive"></span>' }
+                }
             ]
         });
         popup.then(function (res) {
@@ -276,14 +280,99 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
     $ionicHistory.nextViewOptions({
         disableBack: true
     });
+    //************************************* get Office locations from DB*************************************************************************************
+    function getOfficeLocations(){
+
+        //getting Pss office locations
+        var address = globals.ServiceAddress;
+        var method = globals.WebMethods.Addresslocations;
+        var ServiceEndPoint = address + method;
+        CallGetServive($http, ServiceEndPoint, function (response) {
+            if (response != null) {
+
+                locations = response.data.locations;
+                window.globals.locations = locations;
+               
+
+            }
+
+            else {
+                //alert("System Error in locations api");
+
+                var popup = $ionicPopup.show({
+                        title: 'System Error',
+                        template: 'System Error in locations api',
+                        buttons: [
+                            {
+                                text: '<b>OK</b>',
+                                type: 'button-positive',
+                                onTap: function (e) {
+
+                                }
+                            },
+                        ]
+                    });
+
+                    popup.then(function (res) {
+                        //finally
+                    });
+            }
+
+        });
+    }
+
 });
 
-rootController.controller('RegisterController', function ($state, $rootScope, $scope, $ionicHistory, $timeout, $cordovaGeolocation, $interval) {
+rootController.controller('RegisterController', function ($state, $rootScope,$http ,$scope, $ionicHistory, $timeout, $cordovaGeolocation, $interval) {
 
     $scope.accept = function () {
 
+        getOfficeLocations();
         $state.go('app.home', null, { reload: true });
     };
+//************************************* get Office locations from DB*************************************************************************************
+    function getOfficeLocations(){
+
+        //getting Pss office locations
+        var address = globals.ServiceAddress;
+        var method = globals.WebMethods.Addresslocations;
+        var ServiceEndPoint = address + method;
+        CallGetServive($http, ServiceEndPoint, function (response) {
+            if (response != null) {
+
+                locations = response.data.locations;
+                window.globals.locations = locations;
+               
+
+            }
+
+            else {
+                //alert("System Error in locations api");
+
+                var popup = $ionicPopup.show({
+                        title: 'System Error',
+                        template: 'System Error in locations api',
+                        buttons: [
+                            {
+                                text: '<b>OK</b>',
+                                type: 'button-positive',
+                                onTap: function (e) {
+
+                                }
+                            },
+                        ]
+                    });
+
+                    popup.then(function (res) {
+                        //finally
+                    });
+            }
+
+        });
+    }
+
+
+    
 
     $scope.disagree = function() {
 

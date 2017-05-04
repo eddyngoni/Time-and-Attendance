@@ -60,7 +60,7 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
     var users = window.globals.users;
     $scope.offices = window.globals.locations;
     $scope.report_to = window.globals.SESSION.user.reported_to;
-    
+    console.log(window.globals.locations);
     if (jQuery.isEmptyObject(managers)) { //checking managers varialbe 
         
         address = globals.ServiceAddress;
@@ -318,7 +318,7 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
                     window.globals.claimsList.push(requestObj);
                     window.globals.SESSION.userClaimsList.push(requestObj);
                     showToast("Your Travel Claim has been processed.");
-                    $scope.model.to = "";
+                    
 
                     $scope.model.approver = 0;
                    
@@ -795,7 +795,7 @@ rootController.controller('MapController', function ($state, $http, $stateParams
         var method = globals.WebMethods.businesstrip;
         //var users = window.globals.users;
         //alert($scope.model.approver.username);
-        parameter = "?userId=" + users.id + "&name=" + users.firstName+" "+ users.lastName + "&slocation=" + depature + "&dlocation=" + destination + "&stime=" + formatTime() + "&dtime=" + formatTime($scope.timeArrived) + "&distance=" + theDistance + "&reason=" + $scope.selected + "&approver=" + $scope.model.approver.username + "&status=In Progress";
+        parameter = "?userId=" + users.id + "&name=" + users.firstName+" "+ users.lastName + "&slocation=" + depature + "&dlocation=" + destination + "&stime=" + formatTime() + "&dtime=" + formatTime($scope.timeArrived) + "&distance=" + theDistance + "&reason=" + $scope.selected + "&approver=" + $scope.model.approver + "&status=In Progress";
         //var paremeter = "?username=patchala&password=wildlife";
         //alert(parameter);
         var ServiceEndPoint = address + method + parameter;

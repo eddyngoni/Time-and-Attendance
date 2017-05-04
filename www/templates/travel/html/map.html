@@ -26,7 +26,7 @@
                             </select> -->
                             <select name="approver" ng-required="true" ng-model="model.approver" ng-change="changedValue(model.approver)">
                                 <option value="">-Select-</option>
-                                <option value="">{{ report_to }}</option>
+                                <option ng-value="report_to">{{report_to }}</option>
                             </select>
                         </label>
                         <div class="error-container" ng-show="form_map.approver.$error && form_map.$submitted" ng-messages="form_map.approver.$error">
@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div id="map"></div>
-            <div id="panel" class="light-bg"></div> 
+            <div id="panel" class="light-bg item-text-wrap "></div> 
             </form>
 </ion-content>
 </ion-view>
