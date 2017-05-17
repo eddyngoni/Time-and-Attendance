@@ -15,7 +15,7 @@
         <form name="form_travel" novalidate="">
             <div class="padding-bottom">
                 <!-- Employee Travel Claims  -->
-                <ion-list ng-show="isRequest">
+                <ion-list ng-show="isRequest ">
                     <ion-item class="stable-bg radius-4" ng-show="empRequestsList.length" ng-repeat="request in empRequestsList" ng-click="travelDetails(request)">
                         <div class="item-icon-right positive no-background">
                             <b>{{request.name}}</b>
@@ -27,6 +27,20 @@
                         <b><span class="icon ion-information-circled"></span> Record not found!</b>
                     </p>
                 </ion-list>
+                <!--Adnim services-->
+                <ion-list ng-show="isApproved && isAdmin">
+                <ion-item class="stable-bg radius-4" ng-show="empRequestsList.length && request.status == 'Approved'" ng-repeat="request in empRequestsList" ng-click="travelDetails(request)">
+                <div class="item-icon-right positive no-background">
+                <b>{{request.name}}</b>
+                <p style="font-size: 10px !important;">{{ request.distance }}</p>
+                <i class="icon ion-android-arrow-dropright-circle" style="font-size: 21px !important;"></i>
+                </div>
+                </ion-item>
+                <p ng-show="!empRequestsList.length" class="full center padding assertive" style="font-size: 27px !important;">
+                <b><span class="icon ion-information-circled"></span> Record not found!</b>
+                </p>
+                </ion-list>
+
                 <!-- Travel Claims Status  -->
                 <div ng-show="isTrip">
                     <div ng-show="requestsList.length" ng-repeat="requestObj in requestsList" class="card padding stable-bg transparent-9">
@@ -73,7 +87,7 @@
                     </p>
                 </div>
                 <!-- Manual Travel Claim  -->
-                <div ng-show="isCustom"  ng-init="getCurrentLocations()" class="card padding stable-bg transparent-9">
+                <div ng-show="isCustom" class="card padding stable-bg transparent-9">
                     <div class="list">
                         <b class="positive">Manual Travel Claim</b>
                         <hr class="separator" />
@@ -165,6 +179,7 @@
              <a ng-show="isManager && isHr" class="tab-item {{ isRequest ? 'active' : '' }}" ng-click="request()"> Hr Travel Requests</a>
              <a ng-show="!isAdmin" class="tab-item {{ isTrip ? 'active' : '' }}" ng-click="myTrips()">My Trips</a>
              <a ng-show="!isAdmin" class="tab-item {{ isCustom ? 'active' : '' }}" ng-click="customTrip()">Custom Travel</a>
+            <a ng-show="isManager && !isHr && isAdmin" class="tab-item {{ isApproved ? 'active' : '' }}" ng-click="requestApprove()">All Approved Claims</a>
         </div>
     </div>
 </ion-view>

@@ -382,7 +382,7 @@ rootController.controller('TravelController', function ($http,$state, $scope,$io
                 
                 
                 for (var x = 0; x < window.globals.claimsList.length; x++) {
-                    console.log(window.globals.claimsList[x]);
+                    
                     if ($scope.isAdmin) {
                         if (window.globals.claimsList[x].id !== window.globals.SESSION.user.id) {
                             userEmpRequestsList.push(window.globals.claimsList[x]);
@@ -451,7 +451,7 @@ rootController.controller('TravelController', function ($http,$state, $scope,$io
     $scope.isRequest = $scope.isManager;
     $scope.isTrip = false;
     $scope.isCustom = false;
-
+    $scope.isApproved = false;
     if (!$scope.isManager) {
         $scope.isTrip = true;
     }
@@ -461,13 +461,23 @@ rootController.controller('TravelController', function ($http,$state, $scope,$io
         $scope.isRequest = true;
         $scope.isTrip = false;
         $scope.isCustom = false;
+        $scope.isApproved = false;
+       
     };
+$scope.requestApprove = function(){
+
+        $scope.isRequest = false;
+        $scope.isTrip = false;
+        $scope.isCustom = false;
+        $scope.isApproved = true;
+};
 
     $scope.myTrips = function () {
 
         $scope.isRequest = false;
         $scope.isTrip = true;
         $scope.isCustom = false;
+        $scope.isApproved = false;
     };
 
     $scope.customTrip = function () {
@@ -475,6 +485,7 @@ rootController.controller('TravelController', function ($http,$state, $scope,$io
         $scope.isRequest = false;
         $scope.isTrip = false;
         $scope.isCustom = true;
+        $scope.getCurrentLocations();
     };
 
     $scope.travelDetails = function (request) {
