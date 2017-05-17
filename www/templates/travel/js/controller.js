@@ -8,6 +8,249 @@
  *  
  *      
  */
+// rootController.directive('ngautocomplete' ,function () {
+//     console.log('loc')
+//       var map = new google.maps.Map(document.getElementById('map'), {
+//           center: {lat: -33.8688, lng: 151.2195},
+//           zoom: 13
+//         });
+//         var input = document.getElementById('autocomplete');
+
+//         map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+
+//         var autocomplete = new google.maps.places.Autocomplete(input);
+
+//         // Bind the map's bounds (viewport) property to the autocomplete object,
+//         // so that the autocomplete requests use the current map bounds for the
+//         // bounds option in the request.
+//         autocomplete.bindTo('bounds', map);
+
+    
+
+//         autocomplete.addListener('place_changed', function() {
+//           var place = autocomplete.getPlace();
+//           if (!place.geometry) {
+//             // User entered the name of a Place that was not suggested and
+//             // pressed the Enter key, or the Place Details request failed.
+//             window.alert("No details available for input: '" + place.name + "'");
+//             return;
+//           }
+//           var address = '';
+//           if (place.address_components) {
+//             address = [
+//               (place.address_components[0] && place.address_components[0].short_name || ''),
+//               (place.address_components[1] && place.address_components[1].short_name || ''),
+//               (place.address_components[2] && place.address_components[2].short_name || '')
+//             ].join(' ');
+//           }
+//         });
+
+//         // Sets a listener on a radio button to change the filter type on Places
+//         // Autocomplete.
+//       }        
+        
+        
+        
+        
+// )
+'use strict';
+
+/**
+ * A directive for adding google places autocomplete to a text box
+ * google places autocomplete info: https://developers.google.com/maps/documentation/javascript/places
+ *
+ * Simple Usage:
+ *
+ * <input type="text" ng-autocomplete="result"/>
+ *
+ * creates the autocomplete text box and gives you access to the result
+ *
+ *   + `ng-autocomplete="result"`: specifies the directive, $scope.result will hold the textbox result
+ *
+ *
+ * Advanced Usage:
+ *
+ * <input type="text" ng-autocomplete="result" details="details" options="options"/>
+ *
+ *   + `ng-autocomplete="result"`: specifies the directive, $scope.result will hold the textbox autocomplete result
+ *
+ *   + `details="details"`: $scope.details will hold the autocomplete's more detailed result; latlng. address components, etc.
+ *
+ *   + `options="options"`: options provided by the user that filter the autocomplete results
+ *
+ *      + options = {
+ *           types: type,        string, values can be 'geocode', 'establishment', '(regions)', or '(cities)'
+ *           bounds: bounds,     google maps LatLngBounds Object
+ *           country: country    string, ISO 3166-1 Alpha-2 compatible country code. examples; 'ca', 'us', 'gb'
+ *         }
+ *
+ *
+ */
+$(document).on({
+    'DOMNodeInserted': function () {
+     setTimeout(function() {
+        document.querySelector('.pac-container').setAttribute('data-tap-disabled', 'true');
+      });
+    }
+}, '.pac-container');
+
+$(document).on('click', '.pac-item', function () {
+    $(".pac-item").removeClass('pac-item-selected');
+    $(this).addClass('pac-item-selected');
+
+    var query_part = $(this).children('.pac-item-query').map(function () {
+        return $(this).text();
+    }).get().join(" ");
+
+    var results_part = $(this).last().map(function () {
+        return $(this).text();
+    }).get().join(", ");
+
+    var retval = query_part + " " + results_part.replace(query_part, "");
+    setTimeout(function () {
+        $('#Autocomplete').val(retval);
+        $('.pac-container').css({'display' : 'none'});
+    }, 50);
+});
+
+
+rootController.directive('ngAutocomplete', function() {
+    return {
+      require: 'ngModel',
+      scope: {
+        ngModel: '=',
+        options: '=?',
+        details: '=?'
+      },
+
+      link: function(scope, element, attrs, controller) {
+
+        //options for autocomplete
+        var opts
+        var watchEnter = false
+        //convert options provided to opts
+        var initOpts = function() {
+
+          opts = {}
+          if (scope.options) {
+
+            if (scope.options.watchEnter !== true) {
+              watchEnter = false
+            } else {
+              watchEnter = true
+            }
+
+            if (scope.options.types) {
+              opts.types = []
+              opts.types.push(scope.options.types)
+              scope.gPlace.setTypes(opts.types)
+            } else {
+              scope.gPlace.setTypes([])
+            }
+
+            if (scope.options.bounds) {
+              opts.bounds = scope.options.bounds
+              scope.gPlace.setBounds(opts.bounds)
+            } else {
+              scope.gPlace.setBounds(null)
+            }
+
+            if (scope.options.country) {
+              opts.componentRestrictions = {
+                country: scope.options.country
+              }
+              scope.gPlace.setComponentRestrictions(opts.componentRestrictions)
+            } else {
+              scope.gPlace.setComponentRestrictions(null)
+            }
+          }
+        }
+
+        if (scope.gPlace == undefined) {
+          scope.gPlace = new google.maps.places.Autocomplete(element[0], {});
+        }
+        google.maps.event.addListener(scope.gPlace, 'place_changed', function() {
+          var result = scope.gPlace.getPlace();
+          if (result !== undefined) {
+            if (result.address_components !== undefined) {
+
+              scope.$apply(function() {
+
+                scope.details = result;
+
+                controller.$setViewValue(element.val());
+              });
+            }
+            else {
+              if (watchEnter) {
+                getPlace(result)
+              }
+            }
+          }
+        })
+
+        //function to get retrieve the autocompletes first result using the AutocompleteService
+        var getPlace = function(result) {
+          var autocompleteService = new google.maps.places.AutocompleteService();
+          if (result.name.length > 0){
+            autocompleteService.getPlacePredictions(
+              {
+                input: result.name,
+                offset: result.name.length
+              },
+              function listentoresult(list, status) {
+                if(list == null || list.length == 0) {
+
+                  scope.$apply(function() {
+                    scope.details = null;
+                  });
+
+                } else {
+                  var placesService = new google.maps.places.PlacesService(element[0]);
+                  placesService.getDetails(
+                    {'reference': list[0].reference},
+                    function detailsresult(detailsResult, placesServiceStatus) {
+
+                      if (placesServiceStatus == google.maps.GeocoderStatus.OK) {
+                        scope.$apply(function() {
+
+                          controller.$setViewValue(detailsResult.formatted_address);
+                          element.val(detailsResult.formatted_address);
+
+                          scope.details = detailsResult;
+
+                          //on focusout the value reverts, need to set it again.
+                          var watchFocusOut = element.on('focusout', function(event) {
+                            element.val(detailsResult.formatted_address);
+                            element.unbind('focusout')
+                          })
+
+                        });
+                      }
+                    }
+                  );
+                }
+              });
+          }
+        }
+
+        controller.$render = function () {
+          var location = controller.$viewValue;
+          element.val(location);
+        };
+
+        //watch options provided to directive
+        scope.watchOptions = function () {
+          return scope.options
+        };
+        scope.$watch(scope.watchOptions, function () {
+          initOpts()
+        }, true);
+
+      }
+    };
+  });
+
 
 rootController.controller('TrackingController', function ($state, $scope, $ionicHistory) {
    
@@ -40,7 +283,7 @@ rootController.controller('TrackingController', function ($state, $scope, $ionic
     };
 });
 
-rootController.controller('TravelController', function ($http,$state, $scope, $ionicHistory) {
+rootController.controller('TravelController', function ($http,$state, $scope,$ionicPopup, $ionicHistory,$ionicLoading,$cordovaGeolocation) {
    
     $scope.onDragLeft = function () {
         closeNav();
@@ -49,17 +292,19 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
     $scope.onDragRight = function () {
         openNav();
     };
-
+    $scope.from;
+    $scope.isHr = window.globals.isHr;
     window.globals.SESSION.userClaimsList = [];
 
     var userRequestsList = window.globals.SESSION.userClaimsList;
-
+   
     var address = globals.ServiceAddress;
     var method = globals.WebMethods.getbusinesstrips;
     var managers = window.globals.managers;
     var users = window.globals.users;
     $scope.offices = window.globals.locations;
     $scope.report_to = window.globals.SESSION.user.reported_to;
+    var options = { enableHighAccuracy: true, maximumAge: 30000, timeout: 270000 };
     console.log(window.globals.locations);
     if (jQuery.isEmptyObject(managers)) { //checking managers varialbe 
         
@@ -83,8 +328,25 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
                     window.globals.managers = managers;
                 }
             }
-            else
-                alert("System error in Managers API");
+         else {
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
         });
     }
 
@@ -120,16 +382,23 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
                 
                 
                 for (var x = 0; x < window.globals.claimsList.length; x++) {
-                    
+                    console.log(window.globals.claimsList[x]);
                     if ($scope.isAdmin) {
                         if (window.globals.claimsList[x].id !== window.globals.SESSION.user.id) {
                             userEmpRequestsList.push(window.globals.claimsList[x]);
                         }
                     }
                     else if ($scope.isManager) {
-                        if (window.globals.claimsList[x].id !== window.globals.SESSION.user.id && window.globals.claimsList[x].approver == window.globals.SESSION.user.username) {
+                        if($scope.isHr){
+                        if (window.globals.claimsList[x].status =='Approved') {
                             userEmpRequestsList.push(window.globals.claimsList[x]);
                         }
+                    }
+                    else{
+                         if (window.globals.claimsList[x].id !== window.globals.SESSION.user.id && window.globals.claimsList[x].approver == window.globals.SESSION.user.username) {
+                            userEmpRequestsList.push(window.globals.claimsList[x]);
+                        }
+                    }
                     }
                 }
 
@@ -156,8 +425,25 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
             }
 
         }
-        else
-            alert("System error in Managers API");
+         else {
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
     });
 
     //$scope.empRequestsList = userEmpRequestsList;
@@ -196,9 +482,113 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
         $state.go('app.travelDetails', { 'context': angular.toJson(request) });
         //$state.go('app.leaveDetails', { 'context': JSON.stringify(request) });
     };
+//********************************* Address from ****************************************************************** */
+    function getAddressFromLatLang(lat,lng) {
+
+        //console.log("Entering getAddressFromLatLang()");
+
+        var geocoder = new google.maps.Geocoder();
+        var latLng = new google.maps.LatLng(lat, lng);
+
+        geocoder.geocode( { 'latLng': latLng}, function(results, status) {
+
+            //console.log("After getting address");
+            //console.log(results);
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[1]) {
+                   // console.log(results[1]);
+                    
+                    $scope.from = results[1].formatted_address;
+                }
+            }else{
+                alert("Geocode was not successful for the following reason: " + status);
+            }
+        });
+       
+       // console.log("Entering getAddressFromLatLang()");
+    }
+     $scope.getDistanceMetrixBetweenLocations = function(depature, destination){
+
+        var results = null;
+
+        var ServiceEndPoint = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + depature  + "&destinations=" + destination;
+
+        CallGetServive($http, ServiceEndPoint, function (response) {
+
+            if (response != null) {
+                if(response.data != "")
+                  results = response.data; // returns distanceMatrix Object "includes array[destination_addresses], string: origin_addresses, object(distance), object(duration)"
+            }
+             else {
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
+        });
+
+        return results;
+    }
+
+//********************************************get current location******************************************************************************
+     $scope.getCurrentLocations = function() {
+        
+        $cordovaGeolocation.getCurrentPosition(options).then(function (position) {
+
+            var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+            var mapOptions = {
+                center: latLng,
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            getAddressFromLatLang(position.coords.latitude,position.coords.longitude);
+            
+        }, function (error) {
+ 
+            var popup = $ionicPopup.show({
+                        title: 'System Error',
+                        template: 'Could not get location',
+                        buttons: [
+                            {
+                                text: '<b>OK</b>',
+                                type: 'button-positive',
+                                onTap: function (e) {
+
+                                }
+                            },
+                        ]
+                    });
+
+                    popup.then(function (res) {
+                        //finally
+                    });
+
+
+            //return;
+        });
+
+
+        
+    }
+
 
     $scope.logTrip = function (reason, office, from, to, date, time, timeArrived, distance, approver) {
-
+      
         function toMonth(theDate) {
 
             switch (theDate) {
@@ -252,7 +642,6 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
         }
 
         var depature = office;
-        alert(depature);
         if(office === null || office === "") {
 
             depature = from
@@ -263,7 +652,7 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
             depature = from;
         else
             depature = office;
-        alert(depature);
+       
         if (window.globals.LeaverequestsList.length > 0) {
             requestObj = {
                 id: Number(window.globals.claimsList[window.globals.claimsList.length - 1].id) + 1,
@@ -300,12 +689,13 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
         var method = globals.WebMethods.businesstrip;
         //var users = window.globals.users;
        
-        parameter = "?userId=" + users.id + "&name=" + users.firstName + " " + users.lastName + "&slocation=" + depature + "&dlocation=" + to + "&stime=" + formatTime(time) + "&dtime=" + formatTime(timeArrived) + "&distance=" + distance + " km" + "&reason=" + reason + "&approver=" + approver + "&status=In Progress";
+        var parameter = "?userId=" + users.id + "&name=" + users.firstName + " " + users.lastName + "&slocation=" + depature + "&dlocation=" + to + "&stime=" + formatTime(time) + "&dtime=" + formatTime(timeArrived) + "&distance=" + distance + " km" + "&reason=" + reason + "&approver=" + approver + "&status=In Progress";
         //var paremeter = "?username=patchala&password=wildlife";
         //alert(parameter);
         var ServiceEndPoint = address + method + parameter;
-        //alert(ServiceEndPoint);
-        console.log(ServiceEndPoint);
+          $ionicLoading.show({
+        template: 'please wait...'
+        });
         CallGetServive($http, ServiceEndPoint, function (response) {
 
             if (response != null) {
@@ -317,24 +707,41 @@ rootController.controller('TravelController', function ($http,$state, $scope, $i
 
                     window.globals.claimsList.push(requestObj);
                     window.globals.SESSION.userClaimsList.push(requestObj);
+                    $ionicLoading.hide();
                     showToast("Your Travel Claim has been processed.");
                     
-
-                    $scope.model.approver = 0;
-                   
-                    $scope.model = null;
                 }
 
             }
-            else
-                alert("System error in Business trip api");
-        });
+            else {
+                $ionicLoading.hide();
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
 
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
+            
+               
+        });
+       $ionicLoading.hide();
        
     };
 });
 
-rootController.controller('TravelDetailsController', function ($http,$state, $stateParams, $scope, $ionicHistory) {
+rootController.controller('TravelDetailsController', function ($http,$state, $stateParams,$ionicPopup, $scope, $ionicHistory) {
 
     $scope.requestObj = JSON.parse($stateParams.context);
 
@@ -370,6 +777,27 @@ rootController.controller('TravelDetailsController', function ($http,$state, $st
 
                         }
                     }
+                else {
+                $ionicLoading.hide();
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
+                    
                 });
 
                 break;
@@ -400,6 +828,26 @@ rootController.controller('TravelDetailsController', function ($http,$state, $st
 
                         }
                     }
+                else {
+                $ionicLoading.hide();
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
                 });
                 break;
             }
@@ -407,7 +855,7 @@ rootController.controller('TravelDetailsController', function ($http,$state, $st
     };
 });
 
-rootController.controller('MapController', function ($state, $http, $stateParams, $scope, $ionicHistory, $cordovaGeolocation, $interval, $ionicLoading, DistanceMetrix) {
+rootController.controller('MapController', function ($state, $http,$ionicPopup, $stateParams, $scope, $ionicHistory,$cordovaInAppBrowser,$cordovaGeolocation, $interval, $ionicLoading, DistanceMetrix) {
    
     $scope.selected = $stateParams.context;
     var locations = window.globals.locations;
@@ -415,6 +863,14 @@ rootController.controller('MapController', function ($state, $http, $stateParams
     var users = window.globals.users;
     var toLatitude;
     var toLongitude;
+    var travelDetails={
+        slag:'',
+        slog:'',
+        sAddressname:'',
+        dlag:'',
+        dlog:'',
+        dAddressname:''
+    }
     //$scope.offices = locations
 
     $scope.requestObj = 0;
@@ -438,8 +894,26 @@ rootController.controller('MapController', function ($state, $http, $stateParams
                 window.globals.managers = managers;
             }
         }
-        else
-            alert("System error in Managers API");
+        else {
+                $ionicLoading.hide();
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
     });
 
     
@@ -524,8 +998,25 @@ rootController.controller('MapController', function ($state, $http, $stateParams
         //});
 
     }, function (error) {
+
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Could not get location',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
         
-        alert("Could not get location");
     });
 
     function getAddressFromLatLang(lat,lng) {
@@ -544,6 +1035,9 @@ rootController.controller('MapController', function ($state, $http, $stateParams
                    // console.log(results[1]);
                     
                     $scope.from = results[1].formatted_address;
+                    travelDetails.sAddressname = results[1].formatted_address;
+                    travelDetails.slag = lat;
+                    travelDetails.slog = lng;
                 }
             }else{
                 alert("Geocode was not successful for the following reason: " + status);
@@ -615,7 +1109,7 @@ rootController.controller('MapController', function ($state, $http, $stateParams
             });
     }
 
-    function getDistanceMetrixBetweenLocations(depature, destination) {
+    function getDistanceMetrixBetweenLocations(depature, destination){
 
         var results = null;
 
@@ -631,12 +1125,18 @@ rootController.controller('MapController', function ($state, $http, $stateParams
 
         return results;
     }
+
         
+        
+        
+        $scope.openmaps =function()
+        {//window.open('https://twitter.com/gajotres', '_system', 'location=no');
+            window.open('https://www.google.co.za/maps/dir/'+travelDetails.slag+','+travelDetails.slog+'/'+travelDetails.dAddressname, '_system', 'location=no');
+        }
 
     $scope.searchPlace = function (place) {
-
+   travelDetails.dAddressname = place
         $cordovaGeolocation.getCurrentPosition(options).then(function (position) {
-
             showLoading($ionicLoading, "Please wait...");
 
             var geocoder = new google.maps.Geocoder();
@@ -699,7 +1199,9 @@ rootController.controller('MapController', function ($state, $http, $stateParams
     };
 
     $scope.log = function(requestObj) {
-
+        $ionicLoading.show({
+        template: 'please wait...'
+        });
         var theDistance = requestObj.distance;
         var depature = requestObj.departure;
         var destination = requestObj.destination;
@@ -795,7 +1297,7 @@ rootController.controller('MapController', function ($state, $http, $stateParams
         var method = globals.WebMethods.businesstrip;
         //var users = window.globals.users;
         //alert($scope.model.approver.username);
-        parameter = "?userId=" + users.id + "&name=" + users.firstName+" "+ users.lastName + "&slocation=" + depature + "&dlocation=" + destination + "&stime=" + formatTime() + "&dtime=" + formatTime($scope.timeArrived) + "&distance=" + theDistance + "&reason=" + $scope.selected + "&approver=" + $scope.model.approver + "&status=In Progress";
+        var parameter = "?userId=" + users.id + "&name=" + users.firstName+" "+ users.lastName + "&slocation=" + depature + "&dlocation=" + destination + "&stime=" + formatTime() + "&dtime=" + formatTime($scope.timeArrived) + "&distance=" + theDistance + "&reason=" + $scope.selected + "&approver=" + $scope.model.approver + "&status=In Progress";
         //var paremeter = "?username=patchala&password=wildlife";
         //alert(parameter);
         var ServiceEndPoint = address + method + parameter;
@@ -813,19 +1315,16 @@ rootController.controller('MapController', function ($state, $http, $stateParams
                     window.globals.claimsList.push(theRequestObj);
                     window.globals.SESSION.userClaimsList.push(theRequestObj);
                     showToast("Your Travel Claim has been processed.");
-
-                    //$interval.cancel(interval);
-
-                    //document.getElementById("btnsubmit").disabled = true;
-
-                    //alert("after: " + $scope.requestObj.distance);
-                    //toLatitude=null;
-                    //toLongitude = null;
+                    $ionicLoading.hide();
+                    $scope.openmaps();
                 }
 
             }
             else
+            {
+                $ionicLoading.hide();
                 alert("System error in Business trip api");
+            }
         });
 
 
@@ -833,7 +1332,6 @@ rootController.controller('MapController', function ($state, $http, $stateParams
         //window.globals.claimsList.push(requestObj);
         //window.globals.SESSION.userClaimsList.push(requestObj);
 
-        
     };
 
     //$scope.changedValue = function (item) {

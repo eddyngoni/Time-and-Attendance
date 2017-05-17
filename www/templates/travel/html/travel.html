@@ -73,7 +73,7 @@
                     </p>
                 </div>
                 <!-- Manual Travel Claim  -->
-                <div ng-show="isCustom" class="card padding stable-bg transparent-9">
+                <div ng-show="isCustom"  ng-init="getCurrentLocations()" class="card padding stable-bg transparent-9">
                     <div class="list">
                         <b class="positive">Manual Travel Claim</b>
                         <hr class="separator" />
@@ -97,7 +97,8 @@
                             </div>
                             <label ng-show="model.office.title === 'Other'" class="no-borders">
                                 <small class="positive">Departure Address</small>
-                                <input  type="text" name="from" ng-model="model.from" />
+                                <input  type="text" name="from"  ng-model="from"/>
+                               
                             </label>
                             <!--<div class="error-container" ng-show="form_travel.from.$error && form_travel.$submitted" ng-messages="form_travel.from.$error">
                                 <div ng-messages-include="error-list1.html"></div>
@@ -116,23 +117,23 @@
                             <div class="error-container" ng-show="form_travel.date.$error && form_travel.$submitted" ng-messages="form_travel.date.$error">
                                 <div ng-messages-include="error-list1.html"></div>
                             </div>
-                            <label class="no-borders">
+                            <!--<label class="no-borders">
                                 <small class="positive">Time of Departure</small>
                                 <input ng-required="true" type="time" name="time" ng-model="model.time" />
-                            </label>
-                            <div class="error-container" ng-show="form_travel.time.$error && form_travel.$submitted" ng-messages="form_travel.time.$error">
+                            </label>-->
+                            <!--<div class="error-container" ng-show="form_travel.time.$error && form_travel.$submitted" ng-messages="form_travel.time.$error">
                                 <div ng-messages-include="error-list1.html"></div>
                             </div>
                             <label class="no-borders">
                                 <small class="positive">Time Arrived</small>
                                 <input ng-required="true" type="time" name="timeArrived" ng-model="model.timeArrived" />
-                            </label>
+                            </label>-->
                             <div class="error-container" ng-show="form_travel.timeArrived.$error && form_travel.$submitted" ng-messages="form_travel.timeArrived.$error">
                                 <div ng-messages-include="error-list1.html"></div>
                             </div>
                             <label class="no-borders">
                                 <small class="positive">Distance In km (e.g. 34)</small>
-                                <input ng-required="true" type="number" name="distance" ng-model="model.distance" />
+                                <input ng-required="true" type="number" name="distance"  ng-model="model.distance" />
                             </label>
                             <div class="error-container" ng-show="form_travel.distance.$error && form_travel.$submitted" ng-messages="form_travel.distance.$error">
                                 <div ng-messages-include="error-list1.html"></div>
@@ -151,7 +152,7 @@
                                 <div ng-messages-include="error-list1.html"></div>
                             </div>
                         </ion-list>
-                        <button class="button button-full button-positive radius-4" ng-click="form_travel.$valid && logTrip(model.reason, model.office.title, model.from, model.to, model.date, model.time, model.timeArrived, model.distance, model.approver)">Log Travel</button>
+                        <button class="button button-full button-positive radius-4" ng-click="form_travel.$valid && logTrip(model.reason, model.office.title,from, model.to, model.date, model.time, model.timeArrived, model.distance, model.approver)">Log Travel</button>
                     </div>
                 </div>
             </div>
@@ -160,7 +161,8 @@
     <!-- tabs -->
     <div class="tabs-striped tabs-background-dark tabs-color-light transparent-9">
         <div class="tabs">
-             <a ng-show="isManager" class="tab-item {{ isRequest ? 'active' : '' }}" ng-click="request()">Travel Requests</a>
+             <a ng-show="isManager && !isHr" class="tab-item {{ isRequest ? 'active' : '' }}" ng-click="request()">Travel Requests</a>
+             <a ng-show="isManager && isHr" class="tab-item {{ isRequest ? 'active' : '' }}" ng-click="request()"> Hr Travel Requests</a>
              <a ng-show="!isAdmin" class="tab-item {{ isTrip ? 'active' : '' }}" ng-click="myTrips()">My Trips</a>
              <a ng-show="!isAdmin" class="tab-item {{ isCustom ? 'active' : '' }}" ng-click="customTrip()">Custom Travel</a>
         </div>

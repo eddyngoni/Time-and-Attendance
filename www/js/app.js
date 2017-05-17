@@ -15,7 +15,8 @@ window.Ischeckin = false;
 window.Ischeckout = true;
 window.globals = {
 
-    ServiceAddress: "http://providencesoftware.co.za/mobileApi/",
+     ServiceAddress: "http://providencesoftware.co.za/mobileApi/",
+   // ServiceAddress:"http://127.0.0.1/mobileApi/",
  
 
     WebMethods: {
@@ -36,7 +37,10 @@ window.globals = {
         submittimesheet: "TimesheetApplication",
         getallemployees: "GetAllEmployees",
         ApproveTimeSheet_func:"ApproveTimeSheet_func",
-        SetPassword:"SetPassword"
+        SetPassword:"SetPassword",
+        escalate:"Escalate",
+        restPasswordLink:"restPasswordLink",
+        newtimeSheet:"newtimeSheet"
 
     },
 
@@ -64,7 +68,8 @@ window.globals = {
     fingerprint: false,
     isManager: false,
     isLogout: false,
-    checkinrecordid: 0
+    checkinrecordid: 0,
+    isHr:false
 };
 
 //declare the root app 
@@ -99,6 +104,8 @@ app.run(function ($ionicPlatform, $rootScope) {
             $("ion-side-menu-content").css("-ms-transform", "translate3d(0px 0px 0px)");
         }
     });
+
+     
 });
 
 /*app.config(['$httpProvider', function($httpProvider) {
@@ -116,7 +123,7 @@ app.run(function ($ionicPlatform, $rootScope) {
     $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
     $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
 }]);*/
-
+   
 app.config(function ($stateProvider, $urlRouterProvider) {
 
     var provider = $stateProvider;
@@ -282,6 +289,16 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             }
         }
     });
+        provider.state('app.restPassword', {
+        url: '/restPassword',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/authentication/html/restPassword.html',
+                controller: 'restPasswordController'
+            }
+        }
+    });
         provider.state('app.timesheetview', {
         url: '/timesheet/:context',
         views: {
@@ -304,6 +321,15 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                 data: {
                     'context': null
                 }
+            }
+        }
+    });
+provider.state('app.pushtimesheetDetails', {
+        url: '/timesheetDetails',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/timesheet/html/details.html',
+                controller: 'timesheetDetailsController',
             }
         }
     });

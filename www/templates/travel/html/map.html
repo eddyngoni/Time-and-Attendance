@@ -34,22 +34,25 @@
                         </div>
                         <label class="no-borders">
                             <small class="positive">Destination Address</small>
-                            <input type="text" name="to" ng-model="model.to" ng-required="true" />
+                            <input type="text" id="Autocomplete"  name="to" ng-model="model.to"  ng-autocomplete='result1'/>
                         </label>
-
                         <div class="error-container" ng-show="form_map.to.$error && form_map.$submitted" ng-messages="form_map.to.$error">
                             <div ng-messages-include="error-list1.html"></div>
                         </div>
-                        
                     </ion-list>
                     <div>
                         <button class="button button-full button-positive radius-4" ng-click="form_map.$valid && searchPlace(model.to)">Search</button>
-                        <button id="btnsubmit" disabled class="button button-full button-balanced radius-4" ng-click="form_map.$valid && log(requestObj)">Log Trip</button>
+                        <button id="btnsubmit" disabled class="button button-full button-balanced radius-4" ng-click="form_map.$valid && log(requestObj)">Start Trip</button>
                     </div>
                 </div>
             </div>
-            <div id="map"></div>
-            <div id="panel" class="light-bg item-text-wrap "></div> 
+
+
+            <div id="map">
+               
+            </div>
+            <div id="panel" class="light-bg item-text-wrap "></div>
+             
             </form>
 </ion-content>
 </ion-view>

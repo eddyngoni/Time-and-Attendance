@@ -13,10 +13,14 @@
 <ion-view cache-view="false"  on-drag-left="onDragLeft()" ng-init="isAdmn()" on-drag-right="onDragRight()" menu-close view-title="{{ isEmpTab ? 'Employee Leave Applications' : isHistory ? 'My Leave Application Status' : 'New Leave Application' }}" ng-init="form={}; model={}">
     <ion-content class="padding background" scroll="true" overflow-scroll="false">
         <form name="form_leave" novalidate="">
-            <div class="padding-bottom">
-                <!-- Leave Requests -->
-                <ion-list ng-show="isEmpTab">
-                    <ion-item class="stable-bg radius-4" ng-show="empRequestsList.length" ng-repeat="request in empRequestsList" ng-click="leaveDetails(request)">
+            <div class="padding-bottom" >
+                                <!-- Leave Requests for managers-->
+                <ion-list ng-show="isEmpTab && !isHr && !isAdmin">
+                    <label class="item item-input-wrapper" style="padding: 8px 12px !important; margin: 8px 0 !important; border-radius: 8px !important;">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text" placeholder="Search by name" name="search" ng-model="searchName">
+                    </label>
+                    <ion-item class="stable-bg radius-4" ng-show="empRequestsList.length" ng-repeat="request in empRequestsList | filter:searchName" ng-click="leaveDetails(request)">
                         <div class="item-icon-right positive no-background">
                             <b>{{request.EmpName}}</b>
                             <p style="font-size: 10px !important;">{{ request.Status }}</p>
@@ -27,12 +31,43 @@
                         <b><span class="icon ion-information-circled"></span> Record not found!</b>
                     </p>
                 </ion-list>
+                <!--leave request for admin-->
+                 <ion-list ng-show="isEmpTab && !isHr && isAdmin">
+                    <label class="item item-input-wrapper" style="padding: 8px 12px !important; margin: 8px 0 !important; border-radius: 8px !important;">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text" placeholder="Search by name" name="search" ng-model="searchName">
+                    </label>
+                    <ion-item class="stable-bg radius-4" ng-show="empRequestsList.length" ng-repeat="request in empRequestsList | filter:searchName" ng-click="leaveDetails(request)">
+                        <div class="item-icon-right positive no-background">
+                            <b>{{request.EmpName}}</b>
+                            <p style="font-size: 10px !important;">{{ request.Status }}</p>
+                            <i class="icon ion-android-arrow-dropright-circle" style="font-size: 21px !important;"></i>
+                            <p  style="font-size: 12px !important; color:red" ng-show="request.escalated_to !=null">Auto Escalated to you</p>
+                        </div>
+                    </ion-item>
+                    <p ng-show="!empRequestsList.length" class="full center padding assertive" style="font-size: 27px !important;">
+                        <b><span class="icon ion-information-circled"></span> Record not found!</b>
+                    </p>
+                </ion-list>
+                 <!-- Leave Approved for HR -->
+                <ion-list ng-show="isEmpTab && isHr">
+                    <label class="item item-input-wrapper" style="padding: 8px 12px !important; margin: 8px 0 !important; border-radius: 8px !important;">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text" placeholder="Search by name" name="search" ng-model="searchName">
+                    </label>
+                    <ion-item class="stable-bg radius-4" ng-show="empRequestsList.length && request.Status=='Approved'" ng-repeat="request in empRequestsList | filter:searchName" ng-click="leaveDetails(request)">
+                        <div class="item-icon-right positive no-background">
+                            <b>{{request.EmpName}}</b>
+                            <p style="font-size: 10px !important;">{{ request.Status }}</p>
+                            <i class="icon ion-android-arrow-dropright-circle" style="font-size: 21px !important;"></i>
+                        </div>
+                    </ion-item>
+                  
+                </ion-list>
                 <!-- Leave Application Status  -->
                 <div ng-show="isHistory">
-                    <div ng-show="requestsList.length" ng-repeat="request in requestsList" class="card padding stable-bg transparent-9">
+                    <div ng-show="requestsList.length" ng-repeat="request in requestsList" ng-init="escalate(request)" class="card padding stable-bg transparent-9">
                         <div class="list">
-                            <b class="positive"><span class="icon {{ request.Status == 'Approved' ? 'balanced ion-checkmark-round' : request.Status == 'Declined' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ request.Status }}</b>
-                            <hr class="separator" />
                             <ion-list class="positive-bg">
                                 <div class="item item-icon-left positive no-background no-borders">
                                     <i class="icon ion-person light" style="font-size: 31px !important;"></i>
@@ -58,6 +93,9 @@
                                     </span>
                                 </div>
                             </ion-list>
+                            <hr class="separator" />
+                          <p class="positive" style="text-align: right !important;"><span class="icon {{ request.Status == 'Approved' ? 'balanced ion-checkmark-round' : request.Status == 'Declined' ? 'assertive ion-close-round' : 'ion-load-a' }}"></span> {{ request.Status }}</p>
+                            
                         </div>
                     </div>
                     <p ng-show="!requestsList.length" class="full center padding assertive">
@@ -135,7 +173,8 @@
     <!-- tabs -->
     <div class="tabs-striped tabs-background-dark tabs-color-light transparent-9">
         <div class="tabs">
-             <a ng-show="isManager" class="tab-item {{ isEmpTab ? 'active' : '' }}" ng-click="requests()">Leave Requests</a>
+             <a ng-show="isManager  && !isHr" class="tab-item {{ isEmpTab ? 'active' : '' }}" ng-click="requests()">Leave Requests</a>
+             <a ng-show="isManager && isHr" class="tab-item {{ isEmpTab ? 'active' : '' }}" ng-click="requests()">Hr Leave Requests</a>
              <a ng-show="!isAdmin" class="tab-item {{ isHistory ? 'active' : '' }}" ng-click="history()">Application Status</a>
              <a ng-show="!isAdmin" class="tab-item {{ isNew ? 'active' : '' }}" ng-click="applyLeave()">New Application</a>
         </div>

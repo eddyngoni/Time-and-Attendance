@@ -42,6 +42,10 @@
                         <button class="button button-full button-positive radius-4" ng-click="form_signIn.$valid && login(data.username, data.password)">Login</button>
                         <!--<button class="button button-small button-clear button-positive radius-4">Forgot Password?</button>-->
                     </div>
+                    <div class="full center">
+                    <button class="button button-full button-positive button-clear radius-4" ng-click=" forgotPassword()">Forgot password ?</button>
+                    <!--<button class="button button-small button-clear button-positive radius-4">Forgot Password?</button>-->
+                    </div>
                     <div class="full center fingerprint-icon">
                         <img style="text-align: center;" src="{{ isAvailable ? 'img/global/fingerprint.png' : 'img/global/no-fingerprint.png' }}" ng-click="showAuth()">
                     </div> 

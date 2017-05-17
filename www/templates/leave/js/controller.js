@@ -9,7 +9,7 @@
  *      
  */
 
-rootController.controller('LeaveController', function ($http,$state, $scope, $ionicHistory) {
+rootController.controller('LeaveController', function ($http,$state, $scope,$ionicPopup, $ionicHistory) {
    
     $scope.onDragLeft = function() {
         closeNav();
@@ -26,7 +26,11 @@ rootController.controller('LeaveController', function ($http,$state, $scope, $io
     var managers = window.globals.managers;
     var users = window.globals.users;
     $scope.report_to = window.globals.SESSION.user.reported_to;
-    
+    $scope.isHr = window.globals.isHr;
+     var method_es = globals.WebMethods.escalate;//escalate method
+    $scope.escalateObj;
+
+
     //if (jQuery.isEmptyObject(managers)) {
        
         address = globals.ServiceAddress;
@@ -54,8 +58,25 @@ rootController.controller('LeaveController', function ($http,$state, $scope, $io
                     
                 }
             }
-            else
-                alert("System error in Managers API");
+         else {
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
         });
     //}
    
@@ -88,6 +109,7 @@ rootController.controller('LeaveController', function ($http,$state, $scope, $io
                     if (LeaverequestsList[x].UserId === window.globals.SESSION.user.id) {
                         
                         userLeaveRequestsList.push(LeaverequestsList[x]);
+                       
                     }
                 }
 
@@ -97,23 +119,23 @@ rootController.controller('LeaveController', function ($http,$state, $scope, $io
 
                 for (var x = 0; x < LeaverequestsList.length; x++) {
                     if ($scope.isAdmin) {
-                        if (LeaverequestsList[x].UserId !== window.globals.SESSION.user.id ) {
+                        if ((LeaverequestsList[x].UserId !== window.globals.SESSION.user.id &&  LeaverequestsList[x].Approver.toUpperCase() == window.globals.SESSION.user.username.toUpperCase()) || LeaverequestsList[x].escalated_to!==null) {
 
                             userEmpRequestsList.push(LeaverequestsList[x]);
                         }
                     }
                     else if ($scope.isManager) {
-                        if (LeaverequestsList[x].UserId !== window.globals.SESSION.user.id && LeaverequestsList[x].Approver.toUpperCase() == window.globals.SESSION.user.username.toUpperCase()) {
+                        if ((LeaverequestsList[x].UserId !== window.globals.SESSION.user.id && LeaverequestsList[x].Approver.toUpperCase() == window.globals.SESSION.user.username.toUpperCase()) && LeaverequestsList[x].escalated_to === null ){
 
                             userEmpRequestsList.push(LeaverequestsList[x]);
+                            
                         }
                     }
                 }
 
                 $scope.requestsList = userLeaveRequestsList;
-
                 $scope.empRequestsList = userEmpRequestsList;
-
+                
                 if ($scope.isManager)
                     $scope.isEmpTab = $scope.isManager;
                 else if ($scope.isAdmin){
@@ -122,7 +144,7 @@ rootController.controller('LeaveController', function ($http,$state, $scope, $io
                     
                 }
                 else
-                    $scope.isEmpTab = $scope.isManager;
+                $scope.isEmpTab = $scope.isManager;
 
                 $scope.isHistory = false;
                 $scope.isNew = false;
@@ -141,7 +163,7 @@ rootController.controller('LeaveController', function ($http,$state, $scope, $io
     
 
     $scope.leaveDetails = function(request) {
-
+           console.log($scope.isHr);
         $state.go('app.leaveDetails', { 'context': angular.toJson(request) });
         //$state.go('app.leaveDetails', { 'context': JSON.stringify(request) });
     };
@@ -250,7 +272,6 @@ rootController.controller('LeaveController', function ($http,$state, $scope, $io
         //var paremeter = "?username=patchala&password=wildlife";
         //alert(parameter);
         ServiceEndPoint = address + method + parameter;
-        console.log(ServiceEndPoint);
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
 
@@ -264,19 +285,71 @@ rootController.controller('LeaveController', function ($http,$state, $scope, $io
                     $scope.model = null;
                 }
             }
+             else {
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
         });
 
        
         
     };
+    $scope.escalate = function(request){
+        // var oneDay = 24*60*60*1000;
+        // var today = new Date();
+        // var date_submited = new Date(request.Created_on);
+        // var diffDays = Math.round(Math.abs((date_submited.getTime()-today.getTime())/(oneDay)));
+        var user = window.globals.SESSION.user;
+        if($scope.escalateObj != "updated" && request.Status =="In Progress"){
+                      
+            var parameter = "?requestId=" + request.Id;
+            //var paremeter = "?username=patchala&password=wildlife";
+            //alert(parameter);
+            ServiceEndPoint = address + method_es + parameter;
+
+            CallGetServive($http, ServiceEndPoint, function (response) {
+                if (response != null) {
+
+                    if (response.data.LeaveRequest !== "") {
+                    $scope.escalateObj = response.data.LeaveRequest;
+                    }
+                    else{
+                     $scope.escalateObj = "not updated";
+                    }
+                }
+            });
+        }
+};
+
 });
 
-rootController.controller('LeaveDetailsController', function ($http,$state, $stateParams, $scope, $ionicHistory) {
+rootController.controller('LeaveDetailsController', function ($http,$state, $stateParams,$ionicPopup, $scope, $ionicHistory) {
+  
+   $scope.onDragLeft = function() {
+        closeNav();
+    };
 
-    $scope.requestObj = JSON.parse($stateParams.context);
-
+    $scope.onDragRight = function() {
+        openNav();
+    };
+    
     var LeaverequestsList = window.globals.LeaverequestsList;
-
+    $scope.requestObj = JSON.parse($stateParams.context);
     var address = globals.ServiceAddress;
     var method = globals.WebMethods.updateleaverequest;
     var parameters;
@@ -292,7 +365,6 @@ rootController.controller('LeaveDetailsController', function ($http,$state, $sta
 
                 parameters = "?Id=" + request.Id + "&Status=Approved";
                 var ServiceEndPoint = address + method + parameters;
-                console.log(ServiceEndPoint);
                 CallGetServive($http, ServiceEndPoint, function (response) {
                     if (response != null) {
 
@@ -307,6 +379,25 @@ rootController.controller('LeaveDetailsController', function ($http,$state, $sta
 
                         }
                     }
+              else {
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
                 });
 
                 break;
@@ -315,7 +406,6 @@ rootController.controller('LeaveDetailsController', function ($http,$state, $sta
 
         
     };
-
     $scope.reject = function(request) {
 
         for (var x = 0; x < LeaverequestsList.length; x++) {
@@ -327,7 +417,6 @@ rootController.controller('LeaveDetailsController', function ($http,$state, $sta
 
                 parameters = "?Id=" + request.Id + "&Status=Declined";
                 var ServiceEndPoint = address + method + parameters;
-                console.log(ServiceEndPoint);
                 CallGetServive($http, ServiceEndPoint, function (response) {
                     if (response != null) {
 
@@ -342,6 +431,25 @@ rootController.controller('LeaveDetailsController', function ($http,$state, $sta
 
                         }
                     }
+             else {
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
                 });
 
                 break;

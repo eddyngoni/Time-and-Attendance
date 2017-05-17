@@ -11,6 +11,13 @@
 // this is the MenuController were the app's navigation takes place
 rootController.controller('MenuController', function($ionicPlatform, $http, $window,$state, $rootScope, $scope, $timeout, $ionicHistory,$cordovaGeolocation,$ionicPopup,$interval,GeoAlert) {
     
+    $scope.onDragLeft = function() {
+    closeNav();
+    };
+
+    $scope.onDragRight = function() {
+    openNav();
+    };
     $scope.isAdmin = window.globals.isAdmin;
     
     $scope.checkLogged = function() {
@@ -35,16 +42,16 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
     var latitude;
     var longitude;
 
-    $rootScope.activeHome = true;
-    $rootScope.activeLogin = false;
-    $rootScope.activeMeeting = false;
-    $rootScope.activeLogout = false;
-    $rootScope.activeLeave = false;
-    $rootScope.activeSettings = false;
-    $rootScope.activeTravel = false;
-    $rootScope.activeTrip = false;
-    $rootScope.activeTimesheet = false;
-    $rootScope.activecheckinout = false;
+    $scope.activeHome = true;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = false;
+    $scope.activeTravel = false;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = false;
+    $scope.activecheckinout = false;
     $scope.check = window.Ischeckin;
     $scope.Ischeckout = window.Ischeckout;
     
@@ -58,16 +65,16 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
         
         $state.go('app.home', null, { reload: true });
         
-        $rootScope.activeHome = true;
-        $rootScope.activeLogin = false;
-        $rootScope.activeMeeting = false;
-        $rootScope.activeLogout = false;
-        $rootScope.activeSettings = false;
-        $rootScope.activeLeave = false;
-        $rootScope.activeTravel = false;
-        $rootScope.activeTrip = false;
-        $rootScope.activeTimesheet = false;
-        $rootScope.activecheckinout = false;
+    $scope.activeHome = true;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = false;
+    $scope.activeTravel = false;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = false;
+    $scope.activecheckinout = false;
         
         $ionicHistory.nextViewOptions({
             disableBack: true
@@ -78,16 +85,16 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
         
         $state.go('app.login', null, { reload: true });
         
-        $rootScope.activeHome = false;
-        $rootScope.activeLogin = true;
-        $rootScope.activeMeeting = false;
-        $rootScope.activeLogout = false;
-        $rootScope.activeSettings = false;
-        $rootScope.activeLeave = false;
-        $rootScope.activeTravel = false;
-        $rootScope.activeTrip = false;
-        $rootScope.activeTimesheet = false;
-        $rootScope.activecheckinout = false;
+    $scope.activeHome = false;
+    $scope.activeLogin = true;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = false;
+    $scope.activeTravel = false;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = false;
+    $scope.activecheckinout = false;
         
         $ionicHistory.nextViewOptions({
             disableBack: true
@@ -98,16 +105,17 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
         
         $state.go('app.meeting', null, { reload: true });
         
-        $rootScope.activeHome = false;
-        $rootScope.activeLogin = false;
-        $rootScope.activeMeeting = true;
-        $rootScope.activeLogout = false;
-        $rootScope.activeSettings = false;
-        $rootScope.activeLeave = false;
-        $rootScope.activeTravel = false;
-        $rootScope.activeTrip = false;
-        $rootScope.activeTimesheet = false;
-        $rootScope.activecheckinout = false;
+    $scope.activeHome = false;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = true;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = false;
+    $scope.activeTravel = false;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = false;
+    $scope.activecheckinout = false;
+
         
         $ionicHistory.nextViewOptions({
             disableBack: true
@@ -116,18 +124,17 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
 
     $scope.travel = function () {
 
-        $state.go('app.travel', null, { reload: true });
-
-        $rootScope.activeHome = false;
-        $rootScope.activeLogin = false;
-        $rootScope.activeMeeting = false;
-        $rootScope.activeTravel = true;
-        $rootScope.activeSettings = false;
-        $rootScope.activeLogout = false;
-        $rootScope.activeLeave = false;
-        $rootScope.activeTrip = false;
-        $rootScope.activeTimesheet = false;
-        $rootScope.activecheckinout = false;
+    $state.go('app.travel', null, { reload: true });
+    $scope.activeHome = false;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = false;
+    $scope.activeTravel = true;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = false;
+    $scope.activecheckinout = false;
 
 
         $ionicHistory.nextViewOptions({
@@ -138,17 +145,16 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
     $scope.tracking = function () {
 
         $state.go('app.tracking', null, { reload: true });
-
-        $rootScope.activeHome = false;
-        $rootScope.activeLogin = false;
-        $rootScope.activeMeeting = false;
-        $rootScope.activeTravel = false;
-        $rootScope.activeSettings = false;
-        $rootScope.activeLogout = false;
-        $rootScope.activeLeave = false;
-        $rootScope.activeTrip = true;
-        $rootScope.activeTimesheet = false;
-        $rootScope.activecheckinout = false;
+$scope.activeHome = false;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = false;
+    $scope.activeTravel = false;
+    $scope.activeTrip = true;
+    $scope.activeTimesheet = false;
+    $scope.activecheckinout = false;
 
 
         $ionicHistory.nextViewOptions({
@@ -160,16 +166,16 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
         
         $state.go('app.leave', null, { reload: true });
 
-        $rootScope.activeHome = false;
-        $rootScope.activeLogin = false;
-        $rootScope.activeMeeting = false;
-        $rootScope.activeSettings = false;
-        $rootScope.activeLogout = false;
-        $rootScope.activeLeave = true;
-        $rootScope.activeTravel = false;
-        $rootScope.activeTrip = false;
-        $rootScope.activeTimesheet = false;
-        $rootScope.activecheckinout = false;
+        $scope.activeHome = false;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = true;
+    $scope.activeSettings = false;
+    $scope.activeTravel = false;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = false;
+    $scope.activecheckinout = false;
 
 
         $ionicHistory.nextViewOptions({
@@ -181,72 +187,87 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
         
         $state.go('app.settings', null, { reload: true });
 
-        $rootScope.activeHome = false;
-        $rootScope.activeLogin = false;
-        $rootScope.activeMeeting = false;
-        $rootScope.activeSettings = true;
-        $rootScope.activeLogout = false;
-        $rootScope.activeLeave = false;
-        $rootScope.activeTravel = false;
-        $rootScope.activeTrip = false;
-        $rootScope.activeTimesheet = false;
-        $rootScope.activecheckinout = false;
+        $scope.activeHome = false;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = true;
+    $scope.activeTravel = false;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = false;
+    $scope.activecheckinout = false;
+
+         $ionicHistory.nextViewOptions({
+            disableBack: true
+        });
     };
 
     $scope.timesheet = function () {
         
-        $state.go('app.timesheet', null, { reload: true });
+    $state.go('app.timesheet', null, { reload: true });
 
-        $rootScope.activeHome = false;
-        $rootScope.activeLogin = false;
-        $rootScope.activeMeeting = false;
-        $rootScope.activeSettings = false;
-        $rootScope.activeLogout = false;
-        $rootScope.activeLeave = false;
-        $rootScope.activeTravel = false;
-        $rootScope.activeTrip = false;
-        $rootScope.activeTimesheet = true;
-        $rootScope.activecheckinout = false;
+    $scope.activeHome = false;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = false;
+    $scope.activeTravel = false;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = true;
+    $scope.activecheckinout = false;
 
         $ionicHistory.nextViewOptions({
             disableBack: true
         });
     };
     
-    $scope.checkinout = function () {
+    $scope.checkinout = function() {
         
-        $state.go('app.checkinout', null, { reload: true });
-
-        $rootScope.activeHome = false;
-        $rootScope.activeLogin = false;
-        $rootScope.activeMeeting = false;
-        $rootScope.activeSettings = false;
-        $rootScope.activeLogout = false;
-        $rootScope.activeLeave = false;
-        $rootScope.activeTravel = false;
-        $rootScope.activeTrip = false;
-        $rootScope.activeTimesheet = false;
-        $rootScope.activecheckinout = true;
-         $ionicHistory.nextViewOptions({
+    $scope.activeHome = false;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = false;
+    $scope.activeTravel = false;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = false;
+    $scope.activecheckinout = true;   
+    $state.go('app.checkinout', null, { reload: true });
+        $ionicHistory.nextViewOptions({
             disableBack: true
         });
     };
+    $scope.timesheetNotificationSetSideMenu = function(){
+
+    $scope.activeHome = false;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = false;
+    $scope.activeTravel = false;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = true;
+    $scope.activecheckinout = false;
+
+    }
 
     $scope.logout = function() {
         window.isLoggedG = false;
         
-        $rootScope.activeHome = false;
-        $rootScope.activeLogin = false;
-        $rootScope.activeMeeting = false;
-        $rootScope.activeSettings = false;
-        $rootScope.activeLogout = false;
-        $rootScope.activeLeave = false;
-        $rootScope.activeTravel = false;
-        $rootScope.activeTrip = false;
-        $rootScope.activeTimesheet = false;
-        $rootScope.activecheckinout = false;
-        $rootScope.activeLogout = false;
-        
+    $scope.activeHome = false;
+    $scope.activeLogin = false;
+    $scope.activeMeeting = false;
+    $scope.activeLogout = false;
+    $scope.activeLeave = false;
+    $scope.activeSettings = false;
+    $scope.activeTravel = false;
+    $scope.activeTrip = false;
+    $scope.activeTimesheet = false;
+    $scope.activecheckinout = false;
         window.globals.users = [];
         window.globals.employees = [];
         window.globals.employeetimesheet = [];
@@ -280,12 +301,14 @@ rootController.controller('MenuController', function($ionicPlatform, $http, $win
 // *********************************************Check In Button***************************************************************************
 $scope.checkIn_button = function()
 {
-   
+    var date_nw = new Date();
+    var date_now = (date_nw.getUTCDate() + 1) + " " + toMonth(date_nw.getMonth() + 1) + " " + date_nw.getFullYear();
+ if(window.localStorage.getItem('date_checkIn')!=date_now){
+
 for (var x = 0; x < locations.length; x++) {
 
-
                         var theDistance = getDistanceFromLatLonInKm(locations[x].latitude, locations[x].longitude, latitude, longitude);
-                        //alert(theDistance);
+                        console.log(theDistance);
                         if (theDistance <= 100) {
                             var found = true;
                             var loginUserslocation = window.globals.loginUserslocation;
@@ -319,6 +342,27 @@ for (var x = 0; x < locations.length; x++) {
                         });
 
                     }
+ }else{
+
+ var popup = $ionicPopup.show({
+                            title: 'CheckIn status',
+                            template: 'Already checkedIn for today',
+                            buttons: [
+                                {
+                                    text: '<b>OK</b>',
+                                    type: 'button-positive',
+                                    onTap: function (e) {
+
+                                    }
+                                },
+                            ]
+                        });
+
+                        popup.then(function (res) {
+                            //finally
+                        });
+
+ }
                    
 };
 //********************************************get current location******************************************************************************
@@ -349,6 +393,7 @@ for (var x = 0; x < locations.length; x++) {
             //}
 
             //alert(distance(pss35.lat, pss35.lng, -26.165857, 28.240967100000034, "K"));
+            
         }, function (error) {
  
             var popup = $ionicPopup.show({
@@ -421,14 +466,15 @@ for (var x = 0; x < locations.length; x++) {
 
             getOfficeLocations();
             getCurrentLocations();
-
+            var date_nw = new Date();
+            var date_now = (date_nw.getUTCDate() + 1) + " " + toMonth(date_nw.getMonth() + 1) + " " + date_nw.getFullYear();
             if(window.localStorage.getItem('Ischeckin'))
             {
-            $scope.check= window.localStorage.getItem('Ischeckin');
+            $scope.check = window.localStorage.getItem('Ischeckin');
             }
             else
             {
-            $scope.check= window.Ischeckin;
+            $scope.check = window.Ischeckin;
             } 
             if(window.localStorage.getItem('Ischeckout'))
             {
@@ -439,7 +485,15 @@ for (var x = 0; x < locations.length; x++) {
             
             $scope.Ischeckout = window.Ischeckout;
             }   
-       
+
+       if((window.localStorage.getItem('date_checkIn')!=date_now) && window.localStorage.getItem('date_checkIn'))
+       {
+          window.localStorage.removeItem('Ischeckin');
+          window.localStorage.removeItem('Ischeckout');
+          if($scope.check){
+           outCheckOut();
+          }
+       }
         
     };
 
@@ -496,24 +550,60 @@ for (var x = 0; x < locations.length; x++) {
     //         InsertRecordforCheckIn(title, latitude, longitude);
     //     }
     // };
+
+
+    //*****************************************************convert moth to word*************************************************************************** */
+      function toMonth(theDate) {
+
+            switch (theDate) {
+
+                case 1:
+                    return "Jan"
+                case 2:
+                    return "Feb"
+                case 3:
+                    return "Mar"
+                case 4:
+                    return "Apr"
+                case 5:
+                    return "May"
+                case 6:
+                    return "Jun"
+                case 7:
+                    return "Jul"
+                case 8:
+                    return "Aug"
+                case 9:
+                    return "Sep"
+                case 10:
+                    return "Oct"
+                case 11:
+                    return "Nov"
+                default:
+                    return "Dec"
+            }
+        }
+
+
 //***************************************Insert Record for Check In******************************************************************************
     function InsertRecordforCheckIn(title,latitude,longitude) {
 
         method = globals.WebMethods.loggedinRecord;
         parameter = "?userId=" + users.id + "&location=" + title + "&GPS=lat:" + latitude + " lon:" + longitude + "&reportto=" + users.reported_to;
         ServiceEndPoint = address + method + parameter;
-console.log(ServiceEndPoint);
-        CallGetServive($http, ServiceEndPoint, function (response) {
 
+        var date_ck = new Date();
+        var date_checkIn = (date_ck.getUTCDate() + 1) + " " + toMonth(date_ck.getMonth() + 1) + " " + date_ck.getFullYear();
+        CallGetServive($http, ServiceEndPoint, function (response) {
+        
             if (response != null) {
-                if (response.data.checkin !== "") {
-                    
-                   
-                    
-                    
+                if (response.data.checkin !== ""){
+                               
                     window.localStorage.setItem('Ischeckin',true);
                     window.localStorage.setItem('Ischeckout',true);
                     window.globals.checkinrecordid = response.data.checkin;
+                    window.localStorage.setItem('checkin_id',response.data.checkin);
+                    window.localStorage.setItem('date_checkIn',date_checkIn);
                     popup = $ionicPopup.show({
                        title: 'PSS Global',
                        template: 'Succesfully checkedIn',
@@ -567,11 +657,30 @@ console.log(ServiceEndPoint);
     {
         InsertRecordforCheckOut();
     }
+
+    function outCheckOut()
+    {
+        method = globals.WebMethods.logoutRecord;
+        window.globals.checkinrecordid = window.localStorage.getItem('checkin_id');
+        parameter = "?userId=" + users.id + "&recordId=" + window.globals.checkinrecordid;
+        ServiceEndPoint = address + method + parameter;
+        CallGetServive($http, ServiceEndPoint, function (response) {
+
+            if (response != null) {
+
+                if (response.data.checkout !== "") {
+                   window.localStorage.removeItem('Ischeckin');
+                   window.localStorage.removeItem('Ischeckout');
+                   $state.go('app.checkinout', null, { reload: true });
+                }
+    }
+  });
+}
 //*********************************Insert Record for Check Out****************************************************************************************
     function InsertRecordforCheckOut() {
 
         method = globals.WebMethods.logoutRecord;
-        
+        window.globals.checkinrecordid = window.localStorage.getItem('checkin_id');
         parameter = "?userId=" + users.id + "&recordId=" + window.globals.checkinrecordid;
         ServiceEndPoint = address + method + parameter;
         console.log(ServiceEndPoint);
@@ -582,7 +691,7 @@ console.log(ServiceEndPoint);
                 if (response.data.checkout !== "") {
                    window.localStorage.removeItem('Ischeckin');
                    window.localStorage.removeItem('Ischeckout');
-                    var popup = $ionicPopup.show({
+                   var popup = $ionicPopup.show({
                         title: 'PSS Global',
                         template: 'You have checked out',
                         buttons: [

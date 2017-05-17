@@ -9,7 +9,7 @@
  */
 
 // 
-rootController.controller('LoginController', function ($ionicPlatform, $http, $window, $state, $rootScope, $scope, $ionicHistory, $timeout, $cordovaGeolocation, $interval, $cordovaFingerprint,$ionicLoading, $ionicPopup, GeoAlert) {
+rootController.controller('LoginController', function ($ionicPlatform, $http, $window, $state, $rootScope, $scope, $ionicHistory, $timeout, $cordovaGeolocation, $interval, $cordovaFingerprint,$ionicLoading,$cordovaLocalNotification, $ionicPopup, GeoAlert) {
     
     $scope.onDragLeft = function() {
         closeNav();
@@ -18,7 +18,12 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
     $scope.onDragRight = function() {
         openNav();
     };
-
+    $scope.forgotPassword = function(){
+     $state.go('app.restPassword', null, { reload: true });
+       $ionicHistory.nextViewOptions({
+            disableBack: true
+        });
+    }
     var users = window.globals.users;
     var locations = window.globals.locations;
     var checkinrecordid = window.globals.checkinrecordid;
@@ -146,6 +151,47 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
         }
     };
 
+     $scope.newtimeSheet = function(report_to){
+        method = globals.WebMethods.newtimeSheet;
+        var parameter = "?report_to=" + report_to;
+        var listoftimesheet;
+        ServiceEndPoint = address + method + parameter;
+        CallGetServive($http, ServiceEndPoint, function (response) {
+            if (response != null) {
+                
+                if (response.data.newtimeSt !== "") {
+                    //employees = response.data.employees;
+                    //$scope.managers = managers;
+                    for(x=0;x<response.data.newtimeSt.length;x++){
+                      console.log(response.data.newtimeSt[x].Id);
+                        var now = new Date().getTime();
+                        var _10SecondsFromNow = new Date(now + (1 * 1000+x));
+                        $cordovaLocalNotification.schedule({
+                        id: x,
+                        title: 'TimeSheet',
+                        text: response.data.newtimeSt[x].EmpName,
+                        at: _10SecondsFromNow,
+                        }).then(function (result) {
+                        // ...
+                    });
+                    window.globals.employeetimesheet =  response.data.newtimeSt;
+                    // listoftimesheet[x] = response.data.newtimeSt[x];
+                    $rootScope.$on('$cordovaLocalNotification:click',
+                    function (event, notification, state) {
+                     //$scope.timesheetNotificationSetSideMenu();
+                     $scope.timesheet();
+                     $state.go('app.pushtimesheetDetails');
+                    });
+                    }
+
+                }
+            }
+            else
+                alert("System error in newtimeSheet API");
+        });
+    }
+
+
     $scope.login = function(username, password) {
 
         var found = false;
@@ -155,6 +201,7 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
 
         parameter = "?username=" + username + "&pwd=" + password;
         var ServiceEndPoint = address + method + parameter;
+        console.log(ServiceEndPoint);
          $ionicLoading.show({
         template: 'Authenticating...'
         });
@@ -166,24 +213,33 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
                                       
                 window.globals.SESSION.user = response.data.user_details;
                 window.globals.SESSION.user.password = password;
-
                 //alert(JSON.stringify(window.globals.SESSION.user));
-
+                getOfficeLocations();
                 users = response.data.user_details;
                 window.globals.users = users;
                 $ionicLoading.hide();
                 //alert(window.globals.SESSION.user.user_role);
                 //window.globals.UserSession.window.globals.UserSession.user = response.data.user_details;
-
+               
                 if (users.user_role === "1") {
                     window.globals.isAdmin = true;
                 }
                 else if (users.user_role === "2") {
+                    $scope.newtimeSheet(username);
                     window.globals.isManager = true;
                 }
                 else {
                     window.globals.isAdmin = false;
                     window.globals.isManager = false;
+                 }
+                 if(users.department != null || users.department != undefined){
+                 if(users.department.toUpperCase() === "HR")
+                 {
+                    window.globals.isHr = true;
+                 }
+                 else{
+                     window.globals.isHr = false;
+                 }
                  }
             window.isLoggedG = true;
             var popup = $ionicPopup.show({
@@ -225,7 +281,7 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
 
                 }
                 else {
-
+                   $ionicLoading.hide();
                     // if (!found) {
                     var popup = $ionicPopup.show({
                         title: 'System Error',
@@ -322,12 +378,81 @@ rootController.controller('LoginController', function ($ionicPlatform, $http, $w
     }
 
 });
+rootController.controller('restPasswordController',function($state,$http,$scope,$ionicLoading,$ionicHistory){
+        
+    $scope.onDragLeft = function() {
+        closeNav();
+    };
 
-rootController.controller('RegisterController', function ($state, $rootScope,$http ,$scope, $ionicHistory, $timeout, $cordovaGeolocation, $interval) {
+    $scope.onDragRight = function() {
+        openNav();
+    };
+        var address = globals.ServiceAddress;
+        var method = globals.WebMethods.restPasswordLink;
+        var ServiceEndPoint = address + method;
+        $scope.issent=false;
+        $scope.closeCard = function(){
+        $scope.issent=false;
+        $state.go('app.login', null, { reload: true });
+        $ionicHistory.nextViewOptions({
+            disableBack: true
+        });
+             
+        }
+        $scope.submit = function(email){
+                     $ionicLoading.show({
+        template: 'please wait...'
+        });
+            var parameter = "?email=" + email;
+            ServiceEndPoint = ServiceEndPoint +parameter;
+            CallGetServive($http,ServiceEndPoint,function(response){
+                if(response!=null){
+                    if(response.data.sent == 'submitted'){
+                        $scope.issent = true;
+                        $ionicLoading.hide();                             
+                    }else{
+                        if(response.data.sent == ''){
+                        $ionicLoading.hide();
+                        $scope.issent = false;
+                        showToast("Email is not registered with PSS Attendence app!");
+                    }
+                    else{
+                        $ionicLoading.hide();
+                        $scope.issent = false;
+                        showToast("Email not sent try again");
+                    }
+                    }
+                }
+                else {
+
+                //alert("System Error in login api");
+                $ionicLoading.hide();
+                var popup = $ionicPopup.show({
+                        title: 'System Error',
+                        template: 'Check internet connection',
+                        buttons: [
+                            {
+                                text: '<b>OK</b>',
+                                type: 'button-positive',
+                                onTap: function (e) {
+
+                                }
+                            },
+                        ]
+                    });
+
+                    popup.then(function (res) {
+                        //finally
+                    });
+            }
+            })
+        }
+});
+rootController.controller('RegisterController', function ($state, $rootScope,$http ,$scope,$ionicPopup, $ionicHistory, $timeout, $cordovaGeolocation, $interval) {
 
     $scope.accept = function () {
 
-        getOfficeLocations();
+       
         $state.go('app.home', null, { reload: true });
     };
 //************************************* get Office locations from DB*************************************************************************************
@@ -351,7 +476,7 @@ rootController.controller('RegisterController', function ($state, $rootScope,$ht
 
                 var popup = $ionicPopup.show({
                         title: 'System Error',
-                        template: 'System Error in locations api',
+                        template: 'check internet connection',
                         buttons: [
                             {
                                 text: '<b>OK</b>',
@@ -386,6 +511,13 @@ rootController.controller('RegisterController', function ($state, $rootScope,$ht
 
 rootController.controller('SettingsController', function($ionicPlatform, $window,$http, $state, $scope, $ionicHistory, $ionicPopup, $cordovaFingerprint, $ionicLoading) {
     
+    $scope.onDragLeft = function() {
+        closeNav();
+    };
+
+    $scope.onDragRight = function() {
+        openNav();
+    };
     $scope.fingerprint = false;
     $scope.isAvailable = false;
     $scope.isStored = false;

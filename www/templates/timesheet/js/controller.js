@@ -9,7 +9,7 @@
  *      
  */
 
-rootController.controller('TimesheetController', function ($http,$state, $scope, $ionicHistory) {
+rootController.controller('TimesheetController', function ($http,$state, $ionicPopup,$scope, $ionicHistory) {
    
     $scope.onDragLeft = function() {
         closeNav();
@@ -23,18 +23,15 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
     var method;
     var param;
     var ServiceEndPoint;
-
     var employees = window.globals.employees;
     var users = window.globals.users;
-    
-    if (jQuery.isEmptyObject(employees)) {
+    if(jQuery.isEmptyObject(employees)) {
        
         //address = globals.ServiceAddress;
         method = window.globals.WebMethods.getallemployees;
         param = "?username=" + window.globals.SESSION.user.username + "&user_role=" + window.globals.SESSION.user.user_role;
         
         ServiceEndPoint = address + method + param;
-        console.log(ServiceEndPoint);
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
 
@@ -109,7 +106,6 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
         method = globals.WebMethods.gettimesheets;
         var parameter = "?userId=" + users.id + "&fromdate=" + Fdate + "&todate=" + Tdate;
         ServiceEndPoint = address + method + parameter;
-        console.log(ServiceEndPoint);
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
                 
@@ -130,6 +126,7 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
 
 
     };
+
 
 // getting time sheet to be approve
     $scope.gettimesheet = function (empid, fromdate, todate) {
@@ -175,7 +172,6 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
         method = globals.WebMethods.gettimesheets;
         var parameter = "?userId=" + empid + "&fromdate=" + Fdate + "&todate=" + Tdate;
         ServiceEndPoint = address + method + parameter;
-        console.log(ServiceEndPoint);
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
                 
@@ -188,10 +184,27 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
 
                 }
                 else
-                    alert("Record not found!");
+                showToast("Record not found!");
             }
-            else
-                alert("System error in GetEmployees API");
+            else {
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
         });
 
         //$state.go('app.timesheetDetails', { 'context': angular.toJson() });
@@ -234,7 +247,6 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
 
     $scope.submit = function (morningsession, afternoonsession, timesheetdate) {
 
-        //alert("hai");
 
         function toMonth(theDate) {
             
@@ -270,28 +282,41 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
         var start = new Date(timesheetdate);
         var date = (start.getUTCDate()+1) + " " + toMonth(start.getMonth()+1) + " " + start.getFullYear();
         var user = window.globals.SESSION.user;
-        
-        //alert(globals.WebMethods.submittimesheet);
-        
+     
         method = globals.WebMethods.submittimesheet;
-        //alert(method);
-        var parameter = "?userId=" + user.id + "&name=" + user.firstName + " " + user.lastName + " " + user.surName + "&morningsession=" + morningsession + "&afternoonsession=" + afternoonsession + "&timesheetdate=" + date ;
-        //var paremeter = "?username=patchala&password=wildlife";
-        //alert(parameter);
+        var parameter = "?userId=" + user.id + "&name=" + user.firstName + " " + user.lastName + " " + user.surName + "&morningsession=" + morningsession + "&afternoonsession=" + afternoonsession + "&timesheetdate=" + date+"&report_to="+user.reported_to ;
+       
         ServiceEndPoint = address + method + parameter;
-        console.log(ServiceEndPoint);
-        alert(ServiceEndPoint);
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
 
                 if (response.data.TimesheetApplication !== "") {
-
-                    
-                    showToast("Your timesheet entry successfully submitted.");
-
-                    $scope.model = null;
+                    showToast("Your timesheet entry successfully submitted.");   
+                }
+                else{
+                    showToast("not submitted try again");
                 }
             }
+            else {
+
+            var popup = $ionicPopup.show({
+            title: 'System Error',
+            template: 'Check internet connection',
+            buttons: [
+            {
+            text: '<b>OK</b>',
+            type: 'button-positive',
+            onTap: function (e) {
+
+            }
+            },
+            ]
+            });
+
+            popup.then(function (res) {
+            //finally
+            });
+          }
         });
 
        
@@ -302,13 +327,18 @@ rootController.controller('TimesheetController', function ($http,$state, $scope,
 
 });
 
-rootController.controller('timesheetDetailsController', function ($http,$state, $stateParams, $scope, $ionicHistory) {
+rootController.controller('timesheetDetailsController', function ($http,$state,$ionicPopup, $stateParams, $scope, $ionicHistory) {
 
-   
-    
+    $scope.onDragLeft = function() {
+    closeNav();
+    };
+
+    $scope.onDragRight = function() {
+    openNav();
+    };
     var employeetimesheet = window.globals.employeetimesheet;
     var address = globals.ServiceAddress;
-    
+    var user = window.globals.SESSION.user;
     $scope.timesheetDetails = employeetimesheet;
     // Approve Time Sheet
     $scope.isStatus = function (timesheet, index)
@@ -322,6 +352,7 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
             else if(timesheet.approve=='N')
             {
             $scope.sheet_status="Declined";
+           (window.globals.employeetimesheet)[index].approve = timesheet.approve;
             return false;
             }
             else
@@ -334,10 +365,7 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
      $scope.time_sheet_aprove = function (timesheet, index) {
 
         method = globals.WebMethods.ApproveTimeSheet_func;
-        //alert(method);
-        var parameter = "?userId=" + timesheet.Id + "&timesheet=" + timesheet.TimesheetDate+'&status=Y';
-        //var paremeter = "?username=patchala&password=wildlife";
-        //alert(parameter);
+        var parameter = "?userId=" + timesheet.Id + "&timesheet=" + timesheet.TimesheetDate+"&status=Y"+"&approver="+user.firstName;
         ServiceEndPoint = address + method + parameter;
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
@@ -347,10 +375,12 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
                     
                     showToast("successfully approved");
                     timesheet.approve = 'Y';
+                    timesheet.approver = user.firstName;
                     $scope.isStatus(timesheet, index);
                    // $scope.model = null;
                 }
             }
+            
         });
 
        
@@ -363,12 +393,10 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
    
 //Disapprove time sheet
     $scope.time_sheet_disaprove = function (timesheet, index) {
-
+                  console.log(timesheet);
         method = globals.WebMethods.ApproveTimeSheet_func;
-        //alert(method);
-        var parameter = "?userId=" + timesheet.Id + "&timesheet=" + timesheet.TimesheetDate+'&status=N';
-        //var paremeter = "?username=patchala&password=wildlife";
-        //alert(parameter);
+        
+        var parameter = "?userId=" + timesheet.Id + "&timesheet=" + timesheet.TimesheetDate+"&status=N"+"&approver="+user.firstName;
         ServiceEndPoint = address + method + parameter;
         CallGetServive($http, ServiceEndPoint, function (response) {
             if (response != null) {
@@ -378,10 +406,30 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
                     
                     showToast("successfully Disapproved");
                     timesheet.approve = 'N';
+                    timesheet.approver = user.firstName;
                     $scope.isStatus(timesheet, index);
   
                    // $scope.model = null;
                 }
+            }
+            else {
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
             }
         });
     };
@@ -397,7 +445,7 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
         
         if(diffDays>4 && timesheet.approve==null) {
             
-            var parameter = "?userId=" + timesheet.Id + "&timesheet=" + timesheet.TimesheetDate+'&status=Y';
+            var parameter = "?userId=" + timesheet.Id + "&timesheet=" + timesheet.TimesheetDate+"&status=Y"+"&approver=Auto";
             //var paremeter = "?username=patchala&password=wildlife";
             //alert(parameter);
             ServiceEndPoint = address + method + parameter;
@@ -408,9 +456,29 @@ rootController.controller('timesheetDetailsController', function ($http,$state, 
                     if (response.data.st !== "") {
 
                         timesheet.approve = 'Y';
+                        timesheet.approver = 'Auto';
                         $scope.isStatus(timesheet, index);
                     }
                 }
+                else {
+                var popup = $ionicPopup.show({
+                title: 'System Error',
+                template: 'Check internet connection',
+                buttons: [
+                {
+                text: '<b>OK</b>',
+                type: 'button-positive',
+                onTap: function (e) {
+
+                }
+                },
+                ]
+                });
+
+                popup.then(function (res) {
+                //finally
+                });
+            }
             });
             
         }
