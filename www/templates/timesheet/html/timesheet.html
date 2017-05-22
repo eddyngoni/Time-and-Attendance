@@ -12,7 +12,7 @@
 -->
 
 
-<ion-view cache-view="false" on-drag-left="onDragLeft()" on-drag-right="onDragRight()" menu-close view-title="{{ isEmpTab ? 'Employee Timesheet' :  'Timesheet Application' }}" ng-init="form={}; model={}">
+<ion-view cache-view="false" on-drag-left="onDragLeft()" on-drag-right="onDragRight()" menu-close view-title="{{ isEmpTab ? 'Employee Timesheet' :  'New Timesheet' }}" ng-init="form={}; model={}">
     <ion-content class="padding background" scroll="true" overflow-scroll="false">
         <form name="form_timesheet" novalidate="">
             <div class="padding-bottom">
@@ -128,7 +128,7 @@
 
             <a ng-show="isManager" class="tab-item {{ isEmpTab ? 'active' : '' }}" ng-click="getTimesheets()">Timesheets</a>
             <a ng-show="!isAdmin" class="tab-item {{ isView ? 'active' : '' }}" ng-click="getview()">My Timesheets</a>
-            <a ng-show="!isAdmin" class="tab-item {{ isNew ? 'active' : '' }}" ng-click="submitTimesheet()">New Application</a>
+            <a ng-show="!isAdmin" class="tab-item {{ isNew ? 'active' : '' }}" ng-click="submitTimesheet()">New Timesheet</a>
             
             
         </div>

@@ -10,7 +10,7 @@
         Home Page
 -->
 
-<ion-view cache-view="false"  on-drag-left="onDragLeft()" ng-init="isAdmn()" on-drag-right="onDragRight()" menu-close view-title="{{ isEmpTab ? 'Employee Leave Applications' : isHistory ? 'My Leave Application Status' : 'New Leave Application' }}" ng-init="form={}; model={}">
+<ion-view cache-view="false"  on-drag-left="onDragLeft()" ng-init="isAdmn()" on-drag-right="onDragRight()" menu-close view-title="{{ isEmpTab ? 'Employee Leave Applications' : isHistory ? 'Leave Status' : 'New Leave Application' }}" ng-init="form={}; model={}">
     <ion-content class="padding background" scroll="true" overflow-scroll="false">
         <form name="form_leave" novalidate="">
             <div class="padding-bottom" >
@@ -174,9 +174,9 @@
     <div class="tabs-striped tabs-background-dark tabs-color-light transparent-9">
         <div class="tabs">
              <a ng-show="isManager  && !isHr" class="tab-item {{ isEmpTab ? 'active' : '' }}" ng-click="requests()">Leave Requests</a>
-             <a ng-show="isManager && isHr" class="tab-item {{ isEmpTab ? 'active' : '' }}" ng-click="requests()">Hr Leave Requests</a>
-             <a ng-show="!isAdmin" class="tab-item {{ isHistory ? 'active' : '' }}" ng-click="history()">Application Status</a>
-             <a ng-show="!isAdmin" class="tab-item {{ isNew ? 'active' : '' }}" ng-click="applyLeave()">New Application</a>
+             <a ng-show="isManager && isHr" class="tab-item {{ isEmpTab ? 'active' : '' }}" ng-click="requests()">Approved Leave</a>
+             <a ng-show="!isAdmin" class="tab-item {{ isHistory ? 'active' : '' }}" ng-click="history()">Leave Status</a>
+             <a ng-show="!isAdmin" class="tab-item {{ isNew ? 'active' : '' }}" ng-click="applyLeave()">Leave Application</a>
         </div>
     </div>
 </ion-view>
